@@ -1,4 +1,4 @@
-package com.example.etm_app
+package com.ekatalog_etm.app
 
 import io.flutter.embedding.android.FlutterActivity
 

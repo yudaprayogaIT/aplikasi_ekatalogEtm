@@ -30,11 +30,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
   provider: ^6.0.5
   flutter_svg: ^1.1.6
   intl: ^0.18.0
   supabase_flutter: ^2.10.0
   url_launcher: ^6.1.10
+  font_awesome_flutter: ^10.4.0
 
 env:
   sdk: '>=2.18.0 <3.0.0'
