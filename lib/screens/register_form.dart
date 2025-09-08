@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../widgets/primary_button.dart';
 import 'status_screen.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RegistrationFormScreen extends StatefulWidget {
   final String phone;
@@ -511,66 +512,63 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
                         child: loadingBranches
                             ? const Center(child: CircularProgressIndicator())
                             : filtered.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      'Tidak ada hasil${branches.isEmpty ? ' (coba refresh)' : ''}',
+                            ? Center(
+                                child: Text(
+                                  'Tidak ada hasil${branches.isEmpty ? ' (coba refresh)' : ''}',
+                                ),
+                              )
+                            : ListView.separated(
+                                itemCount: filtered.length,
+                                separatorBuilder: (_, __) =>
+                                    const Divider(height: 1),
+                                itemBuilder: (context, idx) {
+                                  final item = filtered[idx];
+                                  final displayLine1 = _formatBranchDisplay(
+                                    item['name'],
+                                    item['daerah'],
+                                  );
+                                  return ListTile(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 4,
                                     ),
-                                  )
-                                : ListView.separated(
-                                    itemCount: filtered.length,
-                                    separatorBuilder: (_, __) =>
-                                        const Divider(height: 1),
-                                    itemBuilder: (context, idx) {
-                                      final item = filtered[idx];
-                                      final displayLine1 = _formatBranchDisplay(
-                                        item['name'],
-                                        item['daerah'],
-                                      );
-                                      return ListTile(
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 4,
-                                        ),
-                                        title: Text(
-                                          displayLine1,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                        subtitle:
-                                            (item['address'] != null &&
-                                                    item['address']!.isNotEmpty)
-                                                ? Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                      top: 4,
-                                                    ),
-                                                    child: Text(
-                                                      item['address']!,
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.grey[600],
-                                                        height: 1.2,
-                                                      ),
-                                                      maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  )
-                                                : null,
-                                        onTap: () {
-                                          selectedBranchId = item['id'];
-                                          selectedBranchName = item['name'];
-                                          selectedBranchAddress = item['address'];
-                                          selectedBranchDaerah = item['daerah'];
-                                          Navigator.of(ctx2).pop();
-                                          setState(() {});
-                                        },
-                                      );
+                                    title: Text(
+                                      displayLine1,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    subtitle:
+                                        (item['address'] != null &&
+                                            item['address']!.isNotEmpty)
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 4,
+                                            ),
+                                            child: Text(
+                                              item['address']!,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey[600],
+                                                height: 1.2,
+                                              ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          )
+                                        : null,
+                                    onTap: () {
+                                      selectedBranchId = item['id'];
+                                      selectedBranchName = item['name'];
+                                      selectedBranchAddress = item['address'];
+                                      selectedBranchDaerah = item['daerah'];
+                                      Navigator.of(ctx2).pop();
+                                      setState(() {});
                                     },
-                                  ),
+                                  );
+                                },
+                              ),
                       ),
                     ],
                   ),
@@ -674,7 +672,8 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
         // debug
         // ignore: avoid_print
         print(
-            '[DEBUG] insert branch response -> ${const JsonEncoder.withIndent('  ').convert(branchInsertRes)}');
+          '[DEBUG] insert branch response -> ${const JsonEncoder.withIndent('  ').convert(branchInsertRes)}',
+        );
 
         if (branchInsertRes == null ||
             (branchInsertRes is Map && (branchInsertRes['id'] == null))) {
@@ -917,346 +916,394 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: primaryColor,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        toolbarHeight: 120,
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 8),
-            Text(
-              'Daftar',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            SizedBox(height: 6),
-            Text('Lengkapi Profil Anda', style: TextStyle(fontSize: 12)),
-          ],
+          leading: IconButton(
+          padding: const EdgeInsets.symmetric(vertical: 35),
+          icon: const Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 18, 16, 16),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              // Company card
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header merah (judul + subjudul)
+          Container(
+            width: double.infinity,
+            color: primaryColor,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  'Daftar',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'poppins',
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                SizedBox(height: 4),
+                Text(
+                  'Lengkapi Profil Anda',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ),
+                SizedBox(height: 15),
+              ],
+            ),
+          ),
+
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+              child: Form(
+                key: _formKey,
+                child: ListView(
                   children: [
-                    const Text(
-                      'Identitas Perusahaan',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: companyNameCtrl,
-                      focusNode: companyNameFocus,
-                      decoration: inputDecoration(
-                        label: 'Nama Perusahaan',
-                        controller: companyNameCtrl,
-                        focusNode: companyNameFocus,
-                      ),
-                      validator: (v) => (v == null || v.trim().isEmpty)
-                          ? 'Nama perusahaan wajib diisi'
-                          : null,
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: companyAddressCtrl,
-                      focusNode: companyAddressFocus,
-                      decoration: inputDecoration(
-                        label: 'Alamat',
-                        controller: companyAddressCtrl,
-                        focusNode: companyAddressFocus,
-                      ),
-                      validator: (v) => (v == null || v.trim().isEmpty)
-                          ? 'Alamat wajib diisi'
-                          : null,
-                      minLines: 1,
-                      maxLines: 3,
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: foundedDisplayCtrl,
-                      focusNode: foundedFocus,
-                      readOnly: true,
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(foundedFocus);
-                        _pickFoundedDate();
-                      },
-                      decoration: inputDecoration(
-                        label: 'Tanggal Berdiri',
-                        controller: foundedDisplayCtrl,
-                        focusNode: foundedFocus,
-                        extraSuffix: IconButton(
-                          icon: const Icon(Icons.calendar_month),
-                          onPressed: () {
-                            FocusScope.of(context).requestFocus(foundedFocus);
-                            _pickFoundedDate();
-                          },
-                        ),
-                        hint: 'YYYY-MM-DD (disimpan)',
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    // Branch selector or manual
-                    loadingBranches
-                        ? SizedBox(
-                            height: 56,
-                            child: Center(child: CircularProgressIndicator()),
-                          )
-                        : (branches.isNotEmpty
-                            ? _buildBranchFieldDisplay()
-                            : Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Cabang Terdekat',
-                                    style: TextStyle(
-                                      color: Colors.grey[700],
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  TextFormField(
-                                    controller: manualBranchCtrl,
-                                    focusNode: manualBranchFocus,
-                                    decoration: inputDecoration(
-                                      label: 'Masukkan nama cabang (manual)',
-                                      controller: manualBranchCtrl,
-                                      focusNode: manualBranchFocus,
-                                    ),
-                                    validator: (v) {
-                                      if ((selectedBranchId == null) &&
-                                          (v == null || v.trim().isEmpty)) {
-                                        return 'Masukkan nama cabang atau refresh daftar';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: OutlinedButton.icon(
-                                          onPressed: _loadBranches,
-                                          icon: const Icon(Icons.refresh),
-                                          label: const Text(
-                                            'Refresh daftar cabang',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )),
-                    const SizedBox(height: 12),
-                    // Debug info area (shows count & peek)
+                    // Company card
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                        horizontal: 12,
-                      ),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Row(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Text('Jumlah cabang: ${branches.length}'),
+                          const Text(
+                            'Identitas Perusahaan',
+                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          ElevatedButton(
-                            onPressed: branches.isEmpty
-                                ? null
-                                : () {
-                                    final peek = branches.take(5).toList();
-                                    showDialog(
-                                      context: context,
-                                      builder: (_) => AlertDialog(
-                                        title: const Text('5 cabang pertama'),
-                                        content: SizedBox(
-                                          width: double.maxFinite,
-                                          child: SingleChildScrollView(
-                                            child: Text(
-                                              const JsonEncoder.withIndent(
-                                                '  ',
-                                              ).convert(peek),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: companyNameCtrl,
+                            focusNode: companyNameFocus,
+                            decoration: inputDecoration(
+                              label: 'Nama Perusahaan',
+                              controller: companyNameCtrl,
+                              focusNode: companyNameFocus,
+                            ),
+                            validator: (v) => (v == null || v.trim().isEmpty)
+                                ? 'Nama perusahaan wajib diisi'
+                                : null,
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: companyAddressCtrl,
+                            focusNode: companyAddressFocus,
+                            decoration: inputDecoration(
+                              label: 'Alamat',
+                              controller: companyAddressCtrl,
+                              focusNode: companyAddressFocus,
+                            ),
+                            validator: (v) => (v == null || v.trim().isEmpty)
+                                ? 'Alamat wajib diisi'
+                                : null,
+                            minLines: 1,
+                            maxLines: 3,
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: foundedDisplayCtrl,
+                            focusNode: foundedFocus,
+                            readOnly: true,
+                            onTap: () {
+                              FocusScope.of(context).requestFocus(foundedFocus);
+                              _pickFoundedDate();
+                            },
+                            decoration: inputDecoration(
+                              label: 'Tanggal Berdiri',
+                              controller: foundedDisplayCtrl,
+                              focusNode: foundedFocus,
+                              extraSuffix: IconButton(
+                                icon: const Icon(FontAwesomeIcons.solidCalendarDays, size: 22),
+                                onPressed: () {
+                                  FocusScope.of(context).requestFocus(foundedFocus);
+                                  _pickFoundedDate();
+                                },
+                              ),
+                              hint: 'DD-MM-YYYY',
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          // Branch selector or manual
+                          loadingBranches
+                              ? SizedBox(
+                                  height: 56,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              : (branches.isNotEmpty
+                                    ? _buildBranchFieldDisplay()
+                                    : Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Cabang Terdekat',
+                                            style: TextStyle(
+                                              color: Colors.grey[700],
+                                              fontSize: 12,
                                             ),
                                           ),
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: const Text('Tutup'),
+                                          const SizedBox(height: 8),
+                                          TextFormField(
+                                            controller: manualBranchCtrl,
+                                            focusNode: manualBranchFocus,
+                                            decoration: inputDecoration(
+                                              label:
+                                                  'Masukkan nama cabang (manual)',
+                                              controller: manualBranchCtrl,
+                                              focusNode: manualBranchFocus,
+                                            ),
+                                            validator: (v) {
+                                              if ((selectedBranchId == null) &&
+                                                  (v == null ||
+                                                      v.trim().isEmpty)) {
+                                                return 'Masukkan nama cabang atau refresh daftar';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: OutlinedButton.icon(
+                                                  onPressed: _loadBranches,
+                                                  icon: const Icon(
+                                                    Icons.refresh,
+                                                  ),
+                                                  label: const Text(
+                                                    'Refresh daftar cabang',
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
-                                      ),
-                                    );
-                                  },
-                            child: const Text('Tampilkan 5'),
+                                      )),
+                          const SizedBox(height: 12),
+                          // Debug info area (shows count & peek)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 12,
+                            ),
+                            // decoration: BoxDecoration(
+                            //   color: Colors.grey.shade50,
+                            //   borderRadius: BorderRadius.circular(8),
+                            // ),
+                            child: Row(
+                              children: [
+                                // Expanded(
+                                //   child: Text(
+                                //     'Jumlah cabang: ${branches.length}',
+                                //   ),
+                                // ),
+                                // ElevatedButton(
+                                //   onPressed: branches.isEmpty
+                                //       ? null
+                                //       : () {
+                                //           final peek = branches
+                                //               .take(5)
+                                //               .toList();
+                                //           showDialog(
+                                //             context: context,
+                                //             builder: (_) => AlertDialog(
+                                //               title: const Text(
+                                //                 '5 cabang pertama',
+                                //               ),
+                                //               content: SizedBox(
+                                //                 width: double.maxFinite,
+                                //                 child: SingleChildScrollView(
+                                //                   child: Text(
+                                //                     const JsonEncoder.withIndent(
+                                //                       '  ',
+                                //                     ).convert(peek),
+                                //                   ),
+                                //                 ),
+                                //               ),
+                                //               actions: [
+                                //                 TextButton(
+                                //                   onPressed: () =>
+                                //                       Navigator.pop(context),
+                                //                   child: const Text('Tutup'),
+                                //                 ),
+                                //               ],
+                                //             ),
+                                //           );
+                                //         },
+                                //   child: const Text('Tampilkan 5'),
+                                // ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
+
+                    const SizedBox(height: 14),
+
+                    // Owner card
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Identitas Pemilik',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: ownerNameCtrl,
+                            focusNode: ownerNameFocus,
+                            decoration: inputDecoration(
+                              label: 'Nama Pemilik',
+                              controller: ownerNameCtrl,
+                              focusNode: ownerNameFocus,
+                            ),
+                            validator: (v) => (v == null || v.trim().isEmpty)
+                                ? 'Nama pemilik wajib diisi'
+                                : null,
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: birthDisplayCtrl,
+                            focusNode: birthFocus,
+                            readOnly: true,
+                            onTap: () {
+                              FocusScope.of(context).requestFocus(birthFocus);
+                              _pickBirthDate();
+                            },
+                            decoration: inputDecoration(
+                              label: 'Tanggal Lahir',
+                              controller: birthDisplayCtrl,
+                              focusNode: birthFocus,
+                              extraSuffix: IconButton(
+                                icon: const Icon(FontAwesomeIcons.solidCalendarDays, size: 22),
+                                onPressed: () {
+                                  FocusScope.of(
+                                    context,
+                                  ).requestFocus(birthFocus);
+                                  _pickBirthDate();
+                                },
+                              ),
+                              hint: 'DD-MM-YYYY',
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          // Gender dropdown
+                          DropdownButtonFormField<String>(
+                            initialValue: selectedGender,
+                            decoration: inputDecoration(label: 'Jenis Kelamin').copyWith(
+                              labelStyle: TextStyle(color: Colors.grey[600]),
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'Laki-laki',
+                                child: Text('Laki-laki'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'Perempuan',
+                                child: Text('Perempuan'),
+                              ),
+                            ],
+                            onChanged: (v) {
+                              setState(() => selectedGender = v);
+                            },
+                            validator: (v) => (v == null || v.isEmpty)
+                                ? 'Pilih jenis kelamin'
+                                : null,
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            initialValue: widget.phone,
+                            readOnly: true,
+                            decoration: inputDecoration(label: 'Nomor Telepon'),
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: passwordCtrl,
+                            focusNode: passwordFocus,
+                            obscureText: !_showPassword,
+                            decoration: inputDecoration(
+                              label: 'Kata Sandi',
+                              controller: passwordCtrl,
+                              focusNode: passwordFocus,
+                              extraSuffix: IconButton(
+                                icon: Icon(
+                                  _showPassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                onPressed: () => setState(
+                                  () => _showPassword = !_showPassword,
+                                ),
+                              ),
+                            ),
+                            validator: _validatePassword,
+                          ),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: confirmPasswordCtrl,
+                            focusNode: confirmFocus,
+                            obscureText: !_showConfirm,
+                            decoration: inputDecoration(
+                              label: 'Konfirmasi Kata Sandi',
+                              controller: confirmPasswordCtrl,
+                              focusNode: confirmFocus,
+                              extraSuffix: IconButton(
+                                icon: Icon(
+                                  _showConfirm
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                onPressed: () => setState(
+                                  () => _showConfirm = !_showConfirm,
+                                ),
+                              ),
+                            ),
+                            validator: (v) {
+                              if (v == null || v.isEmpty)
+                                return 'Konfirmasi wajib diisi';
+                              if (v != passwordCtrl.text)
+                                return 'Konfirmasi tidak cocok';
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 18),
+                    
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: PrimaryButton(
+                        label: loading ? 'Menyimpan...' : 'Simpan & Daftar',
+                        onTap: loading ? null : _saveData,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),
-
-              const SizedBox(height: 14),
-
-              // Owner card
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Identitas Pemilik',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: ownerNameCtrl,
-                      focusNode: ownerNameFocus,
-                      decoration: inputDecoration(
-                        label: 'Nama Pemilik',
-                        controller: ownerNameCtrl,
-                        focusNode: ownerNameFocus,
-                      ),
-                      validator: (v) => (v == null || v.trim().isEmpty)
-                          ? 'Nama pemilik wajib diisi'
-                          : null,
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: birthDisplayCtrl,
-                      focusNode: birthFocus,
-                      readOnly: true,
-                      onTap: () {
-                        FocusScope.of(context).requestFocus(birthFocus);
-                        _pickBirthDate();
-                      },
-                      decoration: inputDecoration(
-                        label: 'Tanggal Lahir',
-                        controller: birthDisplayCtrl,
-                        focusNode: birthFocus,
-                        extraSuffix: IconButton(
-                          icon: const Icon(Icons.calendar_month),
-                          onPressed: () {
-                            FocusScope.of(context).requestFocus(birthFocus);
-                            _pickBirthDate();
-                          },
-                        ),
-                        hint: 'YYYY-MM-DD (disimpan)',
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    // Gender dropdown
-                    DropdownButtonFormField<String>(
-                      value: selectedGender,
-                      decoration: inputDecoration(label: 'Jenis Kelamin'),
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'Laki-laki',
-                          child: Text('Laki-laki'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Perempuan',
-                          child: Text('Perempuan'),
-                        ),
-                      ],
-                      onChanged: (v) {
-                        setState(() => selectedGender = v);
-                      },
-                      validator: (v) => (v == null || v.isEmpty)
-                          ? 'Pilih jenis kelamin'
-                          : null,
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      initialValue: widget.phone,
-                      readOnly: true,
-                      decoration: inputDecoration(label: 'Nomor Telepon'),
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: passwordCtrl,
-                      focusNode: passwordFocus,
-                      obscureText: !_showPassword,
-                      decoration: inputDecoration(
-                        label: 'Kata Sandi',
-                        controller: passwordCtrl,
-                        focusNode: passwordFocus,
-                        extraSuffix: IconButton(
-                          icon: Icon(
-                            _showPassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () =>
-                              setState(() => _showPassword = !_showPassword),
-                        ),
-                      ),
-                      validator: _validatePassword,
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: confirmPasswordCtrl,
-                      focusNode: confirmFocus,
-                      obscureText: !_showConfirm,
-                      decoration: inputDecoration(
-                        label: 'Konfirmasi Kata Sandi',
-                        controller: confirmPasswordCtrl,
-                        focusNode: confirmFocus,
-                        extraSuffix: IconButton(
-                          icon: Icon(
-                            _showConfirm
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () =>
-                              setState(() => _showConfirm = !_showConfirm),
-                        ),
-                      ),
-                      validator: (v) {
-                        if (v == null || v.isEmpty)
-                          return 'Konfirmasi wajib diisi';
-                        if (v != passwordCtrl.text)
-                          return 'Konfirmasi tidak cocok';
-                        return null;
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 18),
-              PrimaryButton(
-                label: loading ? 'Menyimpan...' : 'Simpan & Daftar',
-                onTap: loading ? null : _saveData,
-              ),
-              const SizedBox(height: 24),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

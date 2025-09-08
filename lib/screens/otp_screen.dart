@@ -80,7 +80,7 @@ class _OtpScreenState extends State<OtpScreen>
 
     if (otp == "1234") {
       setState(() {
-        outlineColor = Colors.green;
+        outlineColor = const Color(0xFFFDD100);
         message = "OTP Berhasil!";
         isSuccess = true;
       });
@@ -88,7 +88,7 @@ class _OtpScreenState extends State<OtpScreen>
       _resendTimer?.cancel();
     } else {
       setState(() {
-        outlineColor = Colors.red;
+        outlineColor = const Color(0xFFB11F23);
         message = "OTP Salah!";
         isSuccess = false;
       });
@@ -116,69 +116,74 @@ class _OtpScreenState extends State<OtpScreen>
     return SizedBox(
       width: 60,
       height: 60,
-      child: TextField(
-        controller: _otpControllers[index],
-        focusNode: _textFocusNodes[index],
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        textInputAction: index == 3
-            ? TextInputAction.done
-            : TextInputAction.next,
-        maxLength: 1,
-        autofocus: index == 0,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: InputDecoration(
-          counterText: "",
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: outlineColor, width: 1.5),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: outlineColor, width: 2),
-          ),
-        ),
-        onChanged: (value) {
-          // jika user mengetik lebih dari 1 char (mis copy paste), ambil char pertama
-          if (value.length > 1) {
-            final first = value.characters.first;
-            _otpControllers[index].text = first;
-            _otpControllers[index].selection = const TextSelection.collapsed(
-              offset: 1,
-            );
-          }
-
-          if (value.isNotEmpty) {
-            // pindah ke index berikutnya jika ada
-            if (index < _textFocusNodes.length - 1) {
-              _textFocusNodes[index + 1].requestFocus();
-            } else {
-              // jika ini kotak terakhir, cek OTP
-              if (_otpControllers.every((c) => c.text.isNotEmpty)) {
-                _checkOtp();
-              }
-            }
-          } else {
-            // jika kosong (user menekan backspace), pindah ke sebelumnya
-            if (index > 0) {
+      child: RawKeyboardListener(
+        focusNode: FocusNode(),
+        onKey: (event) {
+          if (event.isKeyPressed(LogicalKeyboardKey.backspace)) {
+            // kalau ada isi, hapus dan tetap di field ini
+            if (_otpControllers[index].text.isNotEmpty) {
+              setState(() {
+                _otpControllers[index].clear();
+              });
+            } else if (index > 0) {
+              // kalau kosong, pindah ke sebelumnya dan hapus di sana juga
+              setState(() {
+                _otpControllers[index - 1].clear();
+              });
               _textFocusNodes[index - 1].requestFocus();
-              _otpControllers[index - 1].selection = TextSelection.collapsed(
-                offset: _otpControllers[index - 1].text.length,
+            }
+          }
+        },
+        child: TextField(
+          controller: _otpControllers[index],
+          focusNode: _textFocusNodes[index],
+          textAlign: TextAlign.center,
+          keyboardType: TextInputType.number,
+          textInputAction: index == 3
+              ? TextInputAction.done
+              : TextInputAction.next,
+          maxLength: 1,
+          autofocus: index == 0,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          decoration: InputDecoration(
+            counterText: "",
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: outlineColor, width: 1.5),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: outlineColor, width: 2),
+            ),
+          ),
+          onChanged: (value) {
+            if (value.length > 1) {
+              // kalau user paste banyak angka → ambil angka pertama aja
+              final first = value.characters.first;
+              _otpControllers[index].text = first;
+              _otpControllers[index].selection = const TextSelection.collapsed(
+                offset: 1,
               );
             }
-          }
 
-          // jika semua terisi akibat paste/typing manual, cek
-          if (_otpControllers.every((c) => c.text.isNotEmpty)) {
-            _checkOtp();
-          }
-        },
-        onSubmitted: (_) {
-          // bila user tekan done pada keyboard di kotak terakhir
-          if (_otpControllers.every((c) => c.text.isNotEmpty)) {
-            _checkOtp();
-          }
-        },
+            if (value.isNotEmpty) {
+              // otomatis pindah ke kanan
+              if (index < _textFocusNodes.length - 1) {
+                _textFocusNodes[index + 1].requestFocus();
+              } else {
+                // kalau semua sudah terisi → cek OTP
+                if (_otpControllers.every((c) => c.text.isNotEmpty)) {
+                  _checkOtp();
+                }
+              }
+            }
+          },
+          onSubmitted: (_) {
+            if (_otpControllers.every((c) => c.text.isNotEmpty)) {
+              _checkOtp();
+            }
+          },
+        ),
       ),
     );
   }
@@ -264,9 +269,8 @@ class _OtpScreenState extends State<OtpScreen>
       appBar: AppBar(
         backgroundColor: primaryColor,
         elevation: 0,
-        leading: IconButton(
-          // jangan beri padding vertikal terlalu besar
-          padding: const EdgeInsets.all(12),
+       leading: IconButton(
+          padding: const EdgeInsets.symmetric(vertical: 35),
           icon: const Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
@@ -275,7 +279,7 @@ class _OtpScreenState extends State<OtpScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // header merah
-          Container(
+           Container(
             width: double.infinity,
             color: primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -283,7 +287,7 @@ class _OtpScreenState extends State<OtpScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
                 Text(
-                  'Daftar',
+                  'Verifikasi Nomor Handphone',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -293,7 +297,7 @@ class _OtpScreenState extends State<OtpScreen>
                 ),
                 SizedBox(height: 4),
                 Text(
-                  'Masukkan nomor handphone untuk aktivasi',
+                  'Masukkan kode OTP',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
@@ -305,7 +309,7 @@ class _OtpScreenState extends State<OtpScreen>
             ),
           ),
 
-          // konten utama dengan padding yang benar
+          // konten utama
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -343,25 +347,48 @@ class _OtpScreenState extends State<OtpScreen>
                     ),
                   ),
 
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 20),
 
                   // resend row: "Tidak menerima kode? Kirim Ulang Kode"
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('Tidak menerima kode?'),
-                      const SizedBox(width: 8),
-                      TextButton(
-                        onPressed: (_resendCooldown == 0 && !isSuccess)
-                            ? _onResendPressed
-                            : null,
-                        child: _resendCooldown == 0
-                            ? const Text('Kirim Ulang Kode')
-                            : Text(
-                                'Kirim Ulang (${_formatCooldown(_resendCooldown)})',
-                              ),
-                      ),
-                    ],
+                  Align(
+                    alignment: Alignment.centerLeft, // posisi ke kiri
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start, // isi column rata kiri
+                      mainAxisSize: MainAxisSize
+                          .min, // biar ukuran column ngikut kontennya
+                      children: [
+                        const Text(
+                          'Tidak menerima kode?',
+                          style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
+                        ),
+                        const SizedBox(height: 8),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero, // hilangin padding bawaan
+                            minimumSize: Size(0, 0), // biar nggak ada min size
+                            foregroundColor: Color(0xFFB11F23), // warna teks
+                            tapTargetSize: MaterialTapTargetSize
+                                .shrinkWrap, // area klik pas konten
+                            alignment:
+                                Alignment.centerLeft, // teksnya rata kiri
+                          ),
+                          onPressed: (_resendCooldown == 0 && !isSuccess)
+                              ? _onResendPressed
+                              : null,
+                          child: _resendCooldown == 0
+                              ? const Text('Kirim Ulang Kode')
+                              : Text(
+                                  'Kirim Ulang (${_formatCooldown(_resendCooldown)})',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
                   ),
 
                   const Spacer(),
@@ -378,11 +405,18 @@ class _OtpScreenState extends State<OtpScreen>
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow.shade700,
+                      backgroundColor: const Color(0xFFFDD100),
                       foregroundColor: Colors.black,
                       minimumSize: const Size(double.infinity, 50),
                     ),
-                    child: const Text("Selanjutnya"),
+                    child: const Text(
+                      "Selanjutnya",
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -412,4 +446,3 @@ class _OtpScreenState extends State<OtpScreen>
     );
   }
 }
-
