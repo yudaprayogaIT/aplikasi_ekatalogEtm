@@ -84,7 +84,7 @@ class WelcomeScreen extends StatelessWidget {
                       child: const Text(
                         "MASUK",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'poppins',
