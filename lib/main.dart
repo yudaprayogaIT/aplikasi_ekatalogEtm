@@ -80,6 +80,9 @@ import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/otp_screen.dart';
+import 'screens/forgot_password_screen.dart';
+import 'screens/reset_otp_screen.dart';
+import 'screens/reset_password_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -110,33 +113,73 @@ class MyApp extends StatelessWidget {
           useMaterial3: false,
         ),
         initialRoute: '/welcome_screen',
-        routes: {
-          '/': (c) => const WelcomeScreen(),
-          // buat route status agar menerima argument
-          StatusScreen.routeName: (context) {
-            final args = ModalRoute.of(context)!.settings.arguments;
-            // bisa pass string phone atau map. Kita support keduanya:
-            String phone = '';
-            if (args is String) phone = args;
-            if (args is Map<String, dynamic> && args.containsKey('phone')) {
-              phone = args['phone']?.toString() ?? '';
-            }
-            return StatusScreen(phone: phone);
-          },
-          '/welcome_screen': (_) => const WelcomeScreen(),
-          '/login': (c) => const LoginScreen(),
-          '/register': (_) => const RegisterScreen(),
-          '/otp': (context) {
-            final phone = ModalRoute.of(context)!.settings.arguments as String;
-            return OtpScreen(phone: phone);
-          },
-          '/register-form': (context) {
-            final phone = ModalRoute.of(context)!.settings.arguments as String;
-            return RegistrationFormScreen(phone: phone);
-          },
-          // tambah route home
-          '/home': (_) => const HomeScreen(),
-        },
+routes: {
+  '/': (c) => const WelcomeScreen(),
+
+  // StatusScreen (menerima phone)
+  StatusScreen.routeName: (c) {
+    final args = ModalRoute.of(c)?.settings.arguments;
+    String phone = '';
+    if (args is String) phone = args;
+    if (args is Map<String, dynamic> && args.containsKey('phone')) {
+      phone = args['phone']?.toString() ?? '';
+    }
+    return StatusScreen(phone: phone);
+  },
+
+  '/welcome_screen': (c) => const WelcomeScreen(),
+  '/login': (c) => const LoginScreen(),
+  '/forgot': (c) => const ForgotPasswordScreen(),
+
+  // Reset OTP (ambil argument dengan aman)
+  '/reset': (c) {
+    final args = ModalRoute.of(c)?.settings.arguments;
+    String phone = '';
+    if (args is String) phone = args;
+    if (args is Map<String, dynamic> && args.containsKey('phone')) {
+      phone = args['phone']?.toString() ?? '';
+    }
+    return ResetOtpScreen(phone: phone);
+  },
+
+  // Reset Password (harus kirim phone juga)
+  '/reset_password': (c) {
+    final args = ModalRoute.of(c)?.settings.arguments;
+    String phone = '';
+    if (args is String) phone = args;
+    if (args is Map<String, dynamic> && args.containsKey('phone')) {
+      phone = args['phone']?.toString() ?? '';
+    }
+    return ResetPasswordScreen(phone: phone);
+  },
+
+  '/register': (c) => const RegisterScreen(),
+
+  // OTP screen (menerima phone)
+  '/otp': (c) {
+    final args = ModalRoute.of(c)?.settings.arguments;
+    String phone = '';
+    if (args is String) phone = args;
+    if (args is Map<String, dynamic> && args.containsKey('phone')) {
+      phone = args['phone']?.toString() ?? '';
+    }
+    return OtpScreen(phone: phone);
+  },
+
+  // Registration form (menerima phone)
+  '/register-form': (c) {
+    final args = ModalRoute.of(c)?.settings.arguments;
+    String phone = '';
+    if (args is String) phone = args;
+    if (args is Map<String, dynamic> && args.containsKey('phone')) {
+      phone = args['phone']?.toString() ?? '';
+    }
+    return RegistrationFormScreen(phone: phone);
+  },
+
+  // home
+  '/home': (c) => const HomeScreen(),
+},
       ),
     );
   }

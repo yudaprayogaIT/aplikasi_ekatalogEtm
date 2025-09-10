@@ -39,6 +39,8 @@ dependencies:
   supabase_flutter: ^2.10.0
   url_launcher: ^6.1.10
   font_awesome_flutter: ^10.4.0
+  local_auth: ^2.3.0
+  flutter_secure_storage: ^9.2.4
 
 env:
   sdk: '>=2.18.0 <3.0.0'

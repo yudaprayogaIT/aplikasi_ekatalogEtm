@@ -166,7 +166,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> resetOwnerPassword(String phone, String newPassword) async {
+  Future<Map<String, dynamic>> resetPassword(String phone, String newPassword) async {
     if (phone.isEmpty || newPassword.isEmpty) return {'ok': false, 'message': 'Data tidak lengkap.'};
     _setLoading(true);
     try {
@@ -184,7 +184,7 @@ class AuthService extends ChangeNotifier {
 
       return {'ok': true, 'message': 'Password berhasil diubah.'};
     } catch (e) {
-      debugPrint('resetOwnerPassword error: $e');
+      debugPrint('resetPassword error: $e');
       return {'ok': false, 'message': 'Terjadi error: ${e.toString()}'};
     } finally {
       _setLoading(false);
