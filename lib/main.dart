@@ -67,22 +67,24 @@
 // }
 
 // main.dart
-import 'package:ekatalog_etm/screens/home_screen.dart';
-import 'package:ekatalog_etm/screens/register_form.dart';
-import 'package:ekatalog_etm/screens/status_screen.dart';
-import 'package:ekatalog_etm/screens/welcome_screen.dart';
+import 'package:ekatalog_etm/screens/post_login/home_screen.dart';
+import 'package:ekatalog_etm/screens/auth/register_form.dart';
+import 'package:ekatalog_etm/screens/common/status_screen.dart';
+import 'package:ekatalog_etm/screens/common/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'services/auth_service.dart';
-import 'screens/splash_screen.dart';
-import 'screens/login_screen.dart';
-import 'screens/register_screen.dart';
-import 'screens/otp_screen.dart';
-import 'screens/forgot_password_screen.dart';
-import 'screens/reset_otp_screen.dart';
-import 'screens/reset_password_screen.dart';
+import 'screens/common/splash_screen.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/auth/register_screen.dart';
+import 'screens/auth/otp_screen.dart';
+import 'screens/auth/forgot_password_screen.dart';
+import 'screens/auth/reset_otp_screen.dart';
+import 'screens/auth/reset_password_screen.dart';
+
+import 'package:ekatalog_etm/screens/post_login/post_login_pages.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -177,8 +179,11 @@ routes: {
     return RegistrationFormScreen(phone: phone);
   },
 
-  // home
+  // home dan semua menu di dalamnya
   '/home': (c) => const HomeScreen(),
+  '/categories': (c) => const CategoriesScreen(),
+  '/favorites': (c) => const FavoritesScreen(),
+  '/account': (c) => const AccountScreen(),
 },
       ),
     );

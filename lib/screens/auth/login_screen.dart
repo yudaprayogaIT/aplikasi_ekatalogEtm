@@ -1,13 +1,13 @@
 // lib/screens/login_screen.dart
-import 'package:ekatalog_etm/screens/status_screen.dart';
+import 'package:ekatalog_etm/screens/common/status_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import '../services/auth_service.dart';
-import '../widgets/primary_button.dart';
+import '../../services/auth_service.dart';
+import '../../widgets/primary_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
