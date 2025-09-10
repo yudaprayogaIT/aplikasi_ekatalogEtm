@@ -1,6 +1,6 @@
 // lib/screens/categories_screen.dart
 import 'package:flutter/material.dart';
-import '../../widgets/bottom_nav.dart';
+import '../../../widgets/bottom_nav.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});

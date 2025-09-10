@@ -1,20 +1,19 @@
-// lib/screens/reset_otp_screen.dart
-import 'package:ekatalog_etm/screens/auth/register_form.dart';
+// sebelum menggunakan otp firebase auth by google
+import 'package:ekatalog_etm/features/auth/ui/register_form.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'reset_password_screen.dart'; // <-- import baru
 
-class ResetOtpScreen extends StatefulWidget {
+class OtpScreen extends StatefulWidget {
   final String phone;
-  const ResetOtpScreen({super.key, required this.phone});
+  const OtpScreen({super.key, required this.phone});
 
   @override
-  State<ResetOtpScreen> createState() => _ResetOtpScreenState();
+  State<OtpScreen> createState() => _OtpScreenState();
 }
 
-class _ResetOtpScreenState extends State<ResetOtpScreen>
+class _OtpScreenState extends State<OtpScreen>
     with SingleTickerProviderStateMixin {
   final List<TextEditingController> _otpControllers = List.generate(
     4,
@@ -56,6 +55,9 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _textFocusNodes[0].requestFocus();
     });
+
+    // optionally start initial cooldown if OTP just dikirim by previous screen
+    // startResendCooldown(); // uncomment if you want cooldown immediately
   }
 
   @override
@@ -76,12 +78,13 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
     String otp = _otpControllers.map((e) => e.text).join();
     if (_otpControllers.any((c) => c.text.isEmpty)) return;
 
-    if (otp == "5678") {
+    if (otp == "1234") {
       setState(() {
         outlineColor = const Color(0xFFFDD100);
         message = "OTP Berhasil!";
         isSuccess = true;
       });
+      // optionally cancel resend timer if success
       _resendTimer?.cancel();
     } else {
       setState(() {
@@ -90,13 +93,16 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
         isSuccess = false;
       });
 
+      // mainkan animasi shake
       _animController.forward(from: 0);
 
+      // bersihkan input setelah animasi
       Timer(const Duration(milliseconds: 420), () {
         if (!mounted) return;
         for (var c in _otpControllers) {
           c.clear();
         }
+        // kembalikan fokus ke kotak pertama
         _textFocusNodes[0].requestFocus();
         setState(() {
           outlineColor = Colors.grey;
@@ -114,11 +120,13 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
         focusNode: FocusNode(),
         onKey: (event) {
           if (event.isKeyPressed(LogicalKeyboardKey.backspace)) {
+            // kalau ada isi, hapus dan tetap di field ini
             if (_otpControllers[index].text.isNotEmpty) {
               setState(() {
                 _otpControllers[index].clear();
               });
             } else if (index > 0) {
+              // kalau kosong, pindah ke sebelumnya dan hapus di sana juga
               setState(() {
                 _otpControllers[index - 1].clear();
               });
@@ -131,8 +139,9 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
           focusNode: _textFocusNodes[index],
           textAlign: TextAlign.center,
           keyboardType: TextInputType.number,
-          textInputAction:
-              index == 3 ? TextInputAction.done : TextInputAction.next,
+          textInputAction: index == 3
+              ? TextInputAction.done
+              : TextInputAction.next,
           maxLength: 1,
           autofocus: index == 0,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -149,16 +158,20 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
           ),
           onChanged: (value) {
             if (value.length > 1) {
+              // kalau user paste banyak angka → ambil angka pertama aja
               final first = value.characters.first;
               _otpControllers[index].text = first;
-              _otpControllers[index].selection =
-                  const TextSelection.collapsed(offset: 1);
+              _otpControllers[index].selection = const TextSelection.collapsed(
+                offset: 1,
+              );
             }
 
             if (value.isNotEmpty) {
+              // otomatis pindah ke kanan
               if (index < _textFocusNodes.length - 1) {
                 _textFocusNodes[index + 1].requestFocus();
               } else {
+                // kalau semua sudah terisi → cek OTP
                 if (_otpControllers.every((c) => c.text.isNotEmpty)) {
                   _checkOtp();
                 }
@@ -175,7 +188,15 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
     );
   }
 
+  // ---------------- Resend OTP logic ----------------
+
   Future<bool> _requestOtpFromServer() async {
+    // TODO: ganti isi fungsi ini dengan pemanggilan API nyata untuk mengirim ulang OTP.
+    // Contoh:
+    // final res = await myApi.sendOtp(phone: widget.phone);
+    // return res.success;
+
+    // Saat ini kita hanya simulate delay dan return true
     await Future.delayed(const Duration(seconds: 1));
     return true;
   }
@@ -200,7 +221,8 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
   }
 
   Future<void> _onResendPressed() async {
-    if (_resendCooldown > 0) return;
+    if (_resendCooldown > 0) return; // safety
+    // optionally disable UI while requesting
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       const SnackBar(content: Text('Mengirim ulang kode...')),
@@ -215,6 +237,7 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
           const SnackBar(content: Text('Kode OTP telah dikirim ulang')),
         );
         _startResendCooldown();
+        // clear any existing OTP input
         for (var c in _otpControllers) c.clear();
         _textFocusNodes[0].requestFocus();
       } else {
@@ -232,8 +255,11 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
   }
 
   String _formatCooldown(int sec) {
+    // format "00s" or "30s"
     return '${sec}s';
   }
+
+  // ---------------- End resend logic ----------------
 
   @override
   Widget build(BuildContext context) {
@@ -243,7 +269,7 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
       appBar: AppBar(
         backgroundColor: primaryColor,
         elevation: 0,
-        leading: IconButton(
+       leading: IconButton(
           padding: const EdgeInsets.symmetric(vertical: 35),
           icon: const Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -253,7 +279,7 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // header merah
-          Container(
+           Container(
             width: double.infinity,
             color: primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -289,6 +315,10 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
+                  // const Text(
+                  //   "Masukkan kode OTP",
+                  //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  // ),
                   const SizedBox(height: 30),
                   AnimatedBuilder(
                     animation: _shakeAnimation,
@@ -319,26 +349,29 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
 
                   const SizedBox(height: 20),
 
-                  // resend row
+                  // resend row: "Tidak menerima kode? Kirim Ulang Kode"
                   Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.centerLeft, // posisi ke kiri
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start, // isi column rata kiri
+                      mainAxisSize: MainAxisSize
+                          .min, // biar ukuran column ngikut kontennya
                       children: [
                         const Text(
                           'Tidak menerima kode?',
-                          style:
-                              TextStyle(fontFamily: 'Poppins', fontSize: 14),
+                          style: TextStyle(fontFamily: 'Poppins', fontSize: 14),
                         ),
                         const SizedBox(height: 8),
                         TextButton(
                           style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            minimumSize: const Size(0, 0),
-                            foregroundColor: const Color(0xFFB11F23),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            alignment: Alignment.centerLeft,
+                            padding: EdgeInsets.zero, // hilangin padding bawaan
+                            minimumSize: Size(0, 0), // biar nggak ada min size
+                            foregroundColor: Color(0xFFB11F23), // warna teks
+                            tapTargetSize: MaterialTapTargetSize
+                                .shrinkWrap, // area klik pas konten
+                            alignment:
+                                Alignment.centerLeft, // teksnya rata kiri
                           ),
                           onPressed: (_resendCooldown == 0 && !isSuccess)
                               ? _onResendPressed
@@ -347,7 +380,7 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
                               ? const Text('Kirim Ulang Kode')
                               : Text(
                                   'Kirim Ulang (${_formatCooldown(_resendCooldown)})',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w500,
                                     fontSize: 14,
@@ -362,13 +395,11 @@ class _ResetOtpScreenState extends State<ResetOtpScreen>
                   ElevatedButton(
                     onPressed: isSuccess
                         ? () {
-                            // NAVIGASI LANGSUNG ke ResetPasswordScreen dengan phone
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (ctx) => ResetPasswordScreen(
-                                  phone: widget.phone,
-                                ),
+                                builder: (context) =>
+                                    RegistrationFormScreen(phone: widget.phone),
                               ),
                             );
                           }

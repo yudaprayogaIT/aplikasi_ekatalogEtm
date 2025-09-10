@@ -67,24 +67,24 @@
 // }
 
 // main.dart
-import 'package:ekatalog_etm/screens/post_login/home_screen.dart';
-import 'package:ekatalog_etm/screens/auth/register_form.dart';
-import 'package:ekatalog_etm/screens/common/status_screen.dart';
-import 'package:ekatalog_etm/screens/common/welcome_screen.dart';
+import 'package:ekatalog_etm/features/post_login/ui/home_screen.dart';
+import 'package:ekatalog_etm/features/auth/ui/register_form.dart';
+import 'package:ekatalog_etm/features/common/ui/status_screen.dart';
+import 'package:ekatalog_etm/features/common/ui/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'services/auth_service.dart';
-import 'screens/common/splash_screen.dart';
-import 'screens/auth/login_screen.dart';
-import 'screens/auth/register_screen.dart';
-import 'screens/auth/otp_screen.dart';
-import 'screens/auth/forgot_password_screen.dart';
-import 'screens/auth/reset_otp_screen.dart';
-import 'screens/auth/reset_password_screen.dart';
+import 'features/common/ui/splash_screen.dart';
+import 'features/auth/ui/login_screen.dart';
+import 'features/auth/ui/register_screen.dart';
+import 'features/auth/ui/otp_screen.dart';
+import 'features/auth/ui/forgot_password_screen.dart';
+import 'features/auth/ui/reset_otp_screen.dart';
+import 'features/auth/ui/reset_password_screen.dart';
 
-import 'package:ekatalog_etm/screens/post_login/post_login_pages.dart';
+import 'package:ekatalog_etm/features/post_login/post_login_pages.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

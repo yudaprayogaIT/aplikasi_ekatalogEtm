@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/auth_service.dart';
-import '../../widgets/primary_button.dart';
+import '../../../services/auth_service.dart';
+import '../../../widgets/primary_button.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String phone;

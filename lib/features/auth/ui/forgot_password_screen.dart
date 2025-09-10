@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../services/auth_service.dart';
-import '../../widgets/primary_button.dart';
+import '../../../services/auth_service.dart';
+import '../../../widgets/primary_button.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../common/status_screen.dart';
+import '../../common/ui/status_screen.dart';
 import 'reset_otp_screen.dart'; // <-- import baru
 
 class ForgotPasswordScreen extends StatefulWidget {
