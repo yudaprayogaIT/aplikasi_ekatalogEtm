@@ -90,6 +90,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../utils/avatar_manager.dart';
 import 'package:flutter/foundation.dart';
 
@@ -125,7 +126,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
       _avatarPath = info?.filePath;
       _bgColor = info != null ? Color(info.bgColor) : Colors.transparent;
     });
-    debugPrint('ProfileHeader: loaded avatarPath=$_avatarPath bg=0x${_bgColor.value.toRadixString(16)}');
+    debugPrint(
+      'ProfileHeader: loaded avatarPath=$_avatarPath bg=0x${_bgColor.value.toRadixString(16)}',
+    );
     if (_avatarPath != null) {
       final exists = await File(_avatarPath!).exists();
       debugPrint('ProfileHeader: file exists? $exists (path=$_avatarPath)');
@@ -148,32 +151,78 @@ class _ProfileHeaderState extends State<ProfileHeader> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 52,
-            height: 52,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: _bgColor,
               shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 3, offset: Offset(0,2))],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 3,
+                  offset: Offset(0, 2),
+                ),
+              ],
             ),
             child: ClipOval(
               child: _avatarPath == null
-                  ? Image.asset('assets/avatar_placeholder.png', fit: BoxFit.cover)
+                  ? Image.asset(
+                      'assets/avatar_placeholder.png',
+                      fit: BoxFit.cover,
+                    )
                   : Image.file(File(_avatarPath!), fit: BoxFit.cover),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Halo, $userName', style: const TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                Text(membership, style: const TextStyle(color: Colors.orange)),
+                Text(
+                  'Halo, $userName',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'poppins',
+                    fontSize: 14,
+                  ),
+                ),
+                // const SizedBox(height: 2),
+                Row(
+                  children: [
+                    Container(
+                      width: 20,
+                      height: 20,
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/iconGold.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      membership,
+                      style: const TextStyle(
+                        color: Color(0xFFB11F23),
+                        fontFamily: 'montserrat',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.notifications_none)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.settings)),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(FontAwesomeIcons.solidClock),
+            iconSize: 20,
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(FontAwesomeIcons.solidBell),
+            iconSize: 20,
+          ),
         ],
       ),
     );

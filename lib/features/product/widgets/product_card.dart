@@ -1,0 +1,180 @@
+// lib/features/product/widgets/product_card.dart
+import 'package:flutter/material.dart';
+import '../../../models/product.dart'; // sesuaikan bila model ada di feature folder
+
+typedef FavoriteCallback = void Function(int productId, bool isFavorite);
+
+class ProductCard extends StatefulWidget {
+  final Product product;
+  final bool isFavorite;
+  final FavoriteCallback onFavoriteChanged;
+  final VoidCallback onTap;
+
+  const ProductCard({
+    super.key,
+    required this.product,
+    required this.isFavorite,
+    required this.onFavoriteChanged,
+    required this.onTap,
+  });
+
+  @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  bool _anim = false;
+
+  void _onFavPressed() {
+    final newVal = !widget.isFavorite;
+    setState(() => _anim = true);
+    Future.delayed(const Duration(milliseconds: 180), () {
+      if (!mounted) return;
+      setState(() => _anim = false);
+      widget.onFavoriteChanged(widget.product.id, newVal);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isFav = widget.isFavorite;
+
+    return SizedBox(
+      width: 160,
+      height: 218,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: Card(
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          elevation: 1.5,
+          clipBehavior: Clip.hardEdge,
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // thumbnail (160 x 160)
+                  SizedBox(
+                    height: 160,
+                    child: widget.product.imageAsset != null
+                        ? ClipRRect(
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                            child: Image.asset(widget.product.imageAsset!, fit: BoxFit.cover, width: double.infinity),
+                          )
+                        : Container(
+                            color: Colors.grey[200],
+                            child: const Center(child: Icon(Icons.image, size: 40, color: Colors.grey)),
+                          ),
+                  ),
+
+                  // footer (58) - title + "Lihat" + chevron-box
+                  SizedBox(
+                    height: 58,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Title (poppins, bold)
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    widget.product.title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                      fontFamily: 'poppins',
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                // "Lihat" (Lato, colored)
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Lihat',
+                                    style: TextStyle(
+                                      color: const Color(0xffB11F23),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Lato',
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(width: 8),
+
+                          // chevron button style (white rounded box)
+                          Container(
+                            width: 34,
+                            height: 34,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey.shade300),
+                              boxShadow: const [
+                                BoxShadow(color: Colors.black12, blurRadius: 2, offset: Offset(0, 1))
+                              ],
+                            ),
+                            child: const Center(child: Icon(Icons.arrow_forward_sharp, size: 20)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              // favorite button overlay top-right, AnimatedScale (pop)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: AnimatedScale(
+                  scale: _anim ? 1.25 : 1.0,
+                  duration: const Duration(milliseconds: 180),
+                  curve: Curves.easeOutBack,
+                  child: Container(
+                    width: 34,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.95),
+                      shape: BoxShape.circle,
+                      boxShadow: const [
+                        BoxShadow(color: Colors.black12, blurRadius: 3, offset: Offset(0, 1))
+                      ],
+                    ),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: Icon(
+                        isFav ? Icons.favorite : Icons.favorite_border,
+                        size: 18,
+                        color: isFav ? Colors.red : Colors.black87,
+                      ),
+                      onPressed: _onFavPressed,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
