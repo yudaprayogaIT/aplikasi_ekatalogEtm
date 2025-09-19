@@ -1,7 +1,7 @@
 // lib/features/product/ui/product_detail_page.dart
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import '../../../models/product.dart';
+import 'package:ekatalog_etm/models/product.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Product product;

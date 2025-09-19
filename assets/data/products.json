@@ -1,0 +1,39 @@
+[
+  {
+    "id": 1,
+    "title": "Acc Bed Baut Sakura",
+    "base_code": "01111023",
+    "category": "Accessories",
+    "sub_category": "Accessories Bed",
+    "detail": "Lemari ini mengandung nilai estetika... contoh deskripsi lengkap produk.",
+    "colors": [
+      { "name": "Putih", "sku": "01111023", "thumbnail": "assets/images/produk/item1_white.png" },
+      { "name": "Merah", "sku": "01111223", "thumbnail": "assets/images/produk/item1_red.png" },
+      { "name": "Biru", "sku": "01111423", "thumbnail": "assets/images/produk/item1_blue.png" }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Lemari UPC Standard",
+    "base_code": "02121011",
+    "category": "Furniture",
+    "sub_category": "Lemari",
+    "detail": "Lemari model standard ...",
+    "colors": [
+      { "name": "Coklat", "sku": "02121011", "thumbnail": "assets/images/produk/item2_brown.png" },
+      { "name": "Hitam",  "sku": "02121211", "thumbnail": "assets/images/produk/item2_black.png" }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Rak Serbaguna",
+    "base_code": "03131001",
+    "category": "Storage",
+    "sub_category": "Rak",
+    "detail": "Rak serbaguna cocok untuk ruang tamu dan kantor.",
+    "colors": [
+      { "name": "Putih", "sku": "03131001", "thumbnail": "assets/images/produk/item3_white.png" },
+      { "name": "Hitam", "sku": "03131201", "thumbnail": "assets/images/produk/item3_black.png" }
+    ]
+  }
+]

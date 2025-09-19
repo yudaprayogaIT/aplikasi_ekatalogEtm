@@ -76,8 +76,9 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/data/products.json
     - assets/images/
-    # - assets/images/produk/
+    - assets/images/produk/
     - assets/fonts/
     - assets/avatars/
     - assets/avatar_placeholder.png

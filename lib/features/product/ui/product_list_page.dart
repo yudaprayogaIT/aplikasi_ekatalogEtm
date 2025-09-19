@@ -1,7 +1,7 @@
 // lib/features/product/ui/product_list_page.dart
 import 'package:flutter/material.dart';
-import '../../../models/product.dart'; // sesuaikan path bila perlu
-import '../widgets/product_card.dart';
+import 'package:ekatalog_etm/models/product.dart';
+import 'package:ekatalog_etm/features/product/widgets/product_card.dart';
 import 'product_detail_page.dart';
 
 class ProductListPage extends StatefulWidget {

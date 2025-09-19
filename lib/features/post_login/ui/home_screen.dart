@@ -1,6 +1,9 @@
 // lib/features/post_login/ui/home_screen.dart
-import 'package:ekatalog_etm/features/product/ui/product_list_page.dart';
 import 'package:flutter/material.dart';
+import 'package:ekatalog_etm/features/product/ui/product_list_page.dart';
+import 'package:ekatalog_etm/features/product/ui/product_detail_page.dart';
+import 'package:ekatalog_etm/features/product/widgets/product_card.dart';
+import 'package:ekatalog_etm/models/product.dart';
 import '../../../widgets/bottom_nav.dart';
 import '../../../widgets/profile_header.dart';
 
@@ -12,16 +15,35 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // menyimpan status favorite tiap produk berdasar index
+  // menyimpan status favorite tiap produk berdasar product.id
   final Map<int, bool> _favorites = {};
-  // status animasi pop per produk
-  final Map<int, bool> _favAnim = {};
 
-  // sample produk untuk horizontal list (ganti dengan data real nanti)
-  final List<String> _sampleTitles = List.generate(
-    6,
-    (i) => 'Lemari UPC #${i + 1}',
-  );
+  // gambar dan sample product (pakai same assets names seperti ProductListPage)
+  final List<String> images = [
+    'assets/images/produk/item1.png',
+    'assets/images/produk/item2.png',
+    'assets/images/produk/item3.png',
+    'assets/images/produk/item4.png',
+  ];
+
+  late final List<Product> _sampleProducts;
+
+  @override
+  void initState() {
+    super.initState();
+    // buat sample products (6 items) — setiap product membawa imageAsset
+    _sampleProducts = List.generate(6, (i) {
+      final id = i;
+      final image = images.isNotEmpty ? images[id % images.length] : null;
+      return Product(id: id, title: 'Lemari UPC #${id + 1}', imageAsset: image);
+    });
+  }
+
+  void _onFavoriteChanged(int productId, bool fav) {
+    setState(() {
+      _favorites[productId] = fav;
+    });
+  }
 
   // small card tetap statis
   Widget _smallCard(String title, {String subtitle = '', Widget? leading}) {
@@ -35,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            // pastikan baris mulai dari kiri sehingga teks akan sejajar kiri
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -55,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               const SizedBox(width: 12),
-              // penting: crossAxisAlignment.start supaya title & subtitle rata kiri
               Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,184 +97,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                 ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // product card: fixed size 160 x 218, menerima index untuk favorite toggle
-  Widget _productCard(int index, String title) {
-    final isFav = _favorites[index] ?? false;
-    final anim = _favAnim[index] ?? false;
-
-    return SizedBox(
-      width: 160,
-      height: 218, // total yang diinginkan
-      child: GestureDetector(
-        onTap: () {
-          // pakai ProductDetail sederhana yang didefinisikan di bawah (menggunakan title)
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => ProductDetail(title: title)),
-          );
-        },
-        child: Card(
-          color: Colors.white,
-          margin: EdgeInsets.zero, // penting agar tidak ada ekstra ruang dari Card
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 1.5,
-          clipBehavior: Clip.hardEdge,
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Gambar fixed 160
-                  SizedBox(
-                    height: 160,
-                    child: Container(
-                      color: Colors.grey[200],
-                      child: const Center(
-                        child: Icon(Icons.image, size: 40, color: Colors.grey),
-                      ),
-                    ),
-                  ),
-
-                  // Footer fixed 58 (tanpa padding vertikal)
-                  SizedBox(
-                    height: 58,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        // bottom radius tetap agar sesuai desain
-                        borderRadius: BorderRadius.vertical(
-                          bottom: Radius.circular(12),
-                        ),
-                      ),
-                      // hanya padding horizontal supaya tidak menambah tinggi
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Row(
-                        children: [
-                          // Judul + 'Lihat' di kiri, gunakan FittedBox agar tidak memicu line-height besar
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Bungkus dengan FittedBox untuk mencegah textScale menggulung tinggi
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    title,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                      fontFamily: 'poppins',
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Lihat',
-                                    style: TextStyle(
-                                      color: const Color(0xffB11F23),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Lato',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(width: 8),
-
-                          // tombol chevron kecil (kotak)
-                          Container(
-                            width: 34,
-                            height: 34,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey.shade300),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                            child: const Center(
-                              child: Icon(Icons.arrow_forward_sharp, size: 20),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              // ikon favorite di pojok kanan atas (di atas gambar) dengan animasi pop
-              Positioned(
-                top: 8,
-                right: 8,
-                child: AnimatedScale(
-                  scale: anim ? 1.25 : 1.0,
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeOutBack,
-                  child: Container(
-                    width: 34,
-                    height: 34,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.95),
-                      shape: BoxShape.circle,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 3,
-                          offset: Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: Icon(
-                        isFav ? Icons.favorite : Icons.favorite_border,
-                        size: 18,
-                        color: isFav ? Colors.red : Colors.black87,
-                      ),
-                      onPressed: () {
-                        // toggle favorite + play simple scale animation
-                        setState(() {
-                          _favorites[index] = !isFav;
-                          _favAnim[index] = true;
-                        });
-                        // reset anim state shortly after
-                        Future.delayed(const Duration(milliseconds: 200), () {
-                          if (mounted) {
-                            setState(() {
-                              _favAnim[index] = false;
-                            });
-                          }
-                        });
-                      },
-                    ),
-                  ),
-                ),
               ),
             ],
           ),
@@ -293,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 12),
 
-              // large image placeholder (boleh disesuaikan height)
+              // large image placeholder
               Container(
                 height: 240,
                 decoration: BoxDecoration(
@@ -307,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 12),
 
-              // two small cards — side by side (scroll horizontal bila sempit)
+              // small cards
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -385,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.pushNamed(
                                 context,
                                 '/home',
-                              ); // ganti sesuai rute
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: primaryColor,
@@ -455,11 +297,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 218,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  itemCount: _sampleTitles.length,
+                  itemCount: _sampleProducts.length,
                   separatorBuilder: (_, __) => const SizedBox(width: 25),
                   padding: const EdgeInsets.symmetric(horizontal: 0),
                   itemBuilder: (context, idx) {
-                    return _productCard(idx, _sampleTitles[idx]);
+                    final p = _sampleProducts[idx];
+                    return ProductCard(
+                      product: p,
+                      isFavorite: _favorites[p.id] ?? false,
+                      onFavoriteChanged: (id, fav) => _onFavoriteChanged(id, fav),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => ProductDetailPage(product: p)),
+                        );
+                      },
+                    );
                   },
                 ),
               ),
@@ -469,20 +322,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-// Simple product detail page (contoh)
-class ProductDetail extends StatelessWidget {
-  final String title;
-  const ProductDetail({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Center(child: Text('Detail produk: $title')),
     );
   }
 }

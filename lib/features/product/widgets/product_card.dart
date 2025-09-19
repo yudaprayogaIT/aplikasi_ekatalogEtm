@@ -1,6 +1,6 @@
 // lib/features/product/widgets/product_card.dart
 import 'package:flutter/material.dart';
-import '../../../models/product.dart';
+import 'package:ekatalog_etm/models/product.dart';
 
 typedef FavoriteCallback = void Function(int productId, bool isFavorite);
 
@@ -41,7 +41,7 @@ class _ProductCardState extends State<ProductCard> {
 
     return SizedBox(
       width: 160,
-      height: 200,
+      height: 218, // total fixed height sesuai permintaan
       child: GestureDetector(
         onTap: widget.onTap,
         child: Card(
@@ -52,19 +52,21 @@ class _ProductCardState extends State<ProductCard> {
             borderRadius: BorderRadius.circular(12),
           ),
           clipBehavior: Clip.hardEdge,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
-              // ==== Bagian gambar ====
-              Stack(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // gambar fixed 160x160
                   SizedBox(
-                    height: 180,
+                    height: 160,
                     width: double.infinity,
                     child: widget.product.imageAsset != null
                         ? Image.asset(
                             widget.product.imageAsset!,
                             fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: 160,
                           )
                         : Container(
                             color: Colors.grey[200],
@@ -73,96 +75,104 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                   ),
-                  // favorite button
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: AnimatedScale(
-                      scale: _anim ? 1.25 : 1.0,
-                      duration: const Duration(milliseconds: 180),
-                      curve: Curves.easeOutBack,
-                      child: Container(
-                        width: 34,
-                        height: 34,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.95),
-                          shape: BoxShape.circle,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 3,
-                              offset: Offset(0, 1),
+
+                  // footer fixed 58
+                  SizedBox(
+                    height: 58,
+                    child: Container(
+                      color: Colors.white,
+                      // gunakan padding horizontal saja supaya tinggi konsisten
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  widget.product.title,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                    fontFamily: 'poppins',
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  'Lihat',
+                                  style: TextStyle(
+                                    color: const Color(0xffB11F23),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Lato',
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: Icon(
-                            isFav ? Icons.favorite : Icons.favorite_border,
-                            size: 18,
-                            color: isFav ? Colors.red : Colors.black87,
                           ),
-                          onPressed: _onFavPressed,
-                        ),
+
+                          const SizedBox(width: 8),
+
+                          Container(
+                            width: 34,
+                            height: 34,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.grey.shade300),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 2,
+                                  offset: Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.arrow_forward_sharp, size: 20),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ],
               ),
 
-              // ==== Bagian footer (judul + lihat + arrow) ====
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              widget.product.title,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                                fontFamily: 'poppins',
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              'Lihat',
-                              style: TextStyle(
-                                color: const Color(0xffB11F23),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Lato',
-                              ),
-                            ),
-                          ],
+              // favorite icon di atas gambar (posisi tetap)
+              Positioned(
+                top: 8,
+                right: 8,
+                child: AnimatedScale(
+                  scale: _anim ? 1.25 : 1.0,
+                  duration: const Duration(milliseconds: 180),
+                  curve: Curves.easeOutBack,
+                  child: Container(
+                    width: 34,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.95),
+                      shape: BoxShape.circle,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 3,
+                          offset: Offset(0, 1),
                         ),
+                      ],
+                    ),
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: Icon(
+                        isFav ? Icons.favorite : Icons.favorite_border,
+                        size: 18,
+                        color: isFav ? Colors.red : Colors.black87,
                       ),
-                      Container(
-                        width: 34,
-                        height: 34,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.grey.shade300),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 2,
-                              offset: Offset(0, 1),
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.arrow_forward_sharp, size: 20),
-                        ),
-                      ),
-                    ],
+                      onPressed: _onFavPressed,
+                    ),
                   ),
                 ),
               ),
