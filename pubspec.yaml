@@ -77,6 +77,7 @@ flutter:
 
   assets:
     - assets/images/
+    # - assets/images/produk/
     - assets/fonts/
     - assets/avatars/
     - assets/avatar_placeholder.png

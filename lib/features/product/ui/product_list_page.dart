@@ -21,6 +21,14 @@ class _ProductListPageState extends State<ProductListPage> {
   static const int _pageSize = 10;
   static const int _maxItems = 50; // simulasi total produk
 
+  // ubah sesuai nama file yang kamu punya
+  final List<String> images = [
+    'assets/images/produk/item1.png',
+    'assets/images/produk/item2.png',
+    'assets/images/produk/item3.png',
+    'assets/images/produk/item4.png',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -66,7 +74,8 @@ class _ProductListPageState extends State<ProductListPage> {
 
     final newItems = List.generate(nextCount, (i) {
       final id = start + i;
-      return Product(id: id, title: 'Lemari UPC #${id + 1}', imageAsset: null);
+      final image = images.isNotEmpty ? images[id % images.length] : null;
+      return Product(id: id, title: 'Lemari UPC #${id + 1}', imageAsset: image);
     });
 
     setState(() {
@@ -85,7 +94,7 @@ class _ProductListPageState extends State<ProductListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F8),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color(0xFFB11F23),
         title: const Text('Produk Baru'),
@@ -93,44 +102,47 @@ class _ProductListPageState extends State<ProductListPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            Expanded(
-              child: GridView.builder(
-                controller: _scrollController,
-                itemCount: _items.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 160 / 218, // menjaga ukuran card sama seperti home
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              Expanded(
+                child: GridView.builder(
+                  controller: _scrollController,
+                  itemCount: _items.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 160 / 218,
+                  ),
+                  itemBuilder: (context, idx) {
+                    final p = _items[idx];
+                    return ProductCard(
+                      product: p,
+                      isFavorite: _favorites[p.id] ?? false,
+                      onFavoriteChanged: _onFavoriteChanged,
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(product: p)));
+                      },
+                    );
+                  },
                 ),
-                itemBuilder: (context, idx) {
-                  final p = _items[idx];
-                  return ProductCard(
-                    product: p,
-                    isFavorite: _favorites[p.id] ?? false,
-                    onFavoriteChanged: _onFavoriteChanged,
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(product: p)));
-                    },
-                  );
-                },
-              ),
-            ),
-
-            if (_loadingMore)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
               ),
 
-            if (!_hasMore && !_loadingMore)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                child: Text('Semua produk dimuat', style: TextStyle(color: Colors.grey.shade600)),
-              ),
-          ],
+              if (_loadingMore)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                ),
+
+              if (!_hasMore && !_loadingMore)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Text('Semua produk dimuat', style: TextStyle(color: Colors.grey.shade600)),
+                ),
+            ],
+          ),
         ),
       ),
     );
