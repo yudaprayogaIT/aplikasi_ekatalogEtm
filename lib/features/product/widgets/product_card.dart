@@ -38,10 +38,11 @@ class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     final isFav = widget.isFavorite;
+    final thumbnail = widget.product.defaultColor?.thumbnail;
 
     return SizedBox(
       width: 160,
-      height: 218, // total fixed height sesuai permintaan
+      height: 218,
       child: GestureDetector(
         onTap: widget.onTap,
         child: Card(
@@ -57,13 +58,12 @@ class _ProductCardState extends State<ProductCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // gambar fixed 160x160
                   SizedBox(
                     height: 160,
                     width: double.infinity,
-                    child: widget.product.imageAsset != null
+                    child: thumbnail != null
                         ? Image.asset(
-                            widget.product.imageAsset!,
+                            thumbnail,
                             fit: BoxFit.cover,
                             width: double.infinity,
                             height: 160,
@@ -75,13 +75,10 @@ class _ProductCardState extends State<ProductCard> {
                             ),
                           ),
                   ),
-
-                  // footer fixed 58
                   SizedBox(
                     height: 58,
                     child: Container(
                       color: Colors.white,
-                      // gunakan padding horizontal saja supaya tinggi konsisten
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Row(
                         children: [
@@ -113,9 +110,7 @@ class _ProductCardState extends State<ProductCard> {
                               ],
                             ),
                           ),
-
                           const SizedBox(width: 8),
-
                           Container(
                             width: 34,
                             height: 34,
@@ -141,8 +136,6 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                 ],
               ),
-
-              // favorite icon di atas gambar (posisi tetap)
               Positioned(
                 top: 8,
                 right: 8,

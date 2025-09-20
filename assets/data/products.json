@@ -1,39 +1,206 @@
 [
   {
     "id": 1,
-    "title": "Acc Bed Baut Sakura",
-    "base_code": "01111023",
-    "category": "Accessories",
-    "sub_category": "Accessories Bed",
-    "detail": "Lemari ini mengandung nilai estetika... contoh deskripsi lengkap produk.",
+    "title": "KP SOFA BELUDRU LUXURY",
+    "base_code": "0080196000000",
+    "category": "KAIN POLOS SOFA",
+    "sub_category": "KP SOFA BELUDRU LUXURY",
+    "detail": "Kain polos SOFA BELUDRU LUXURY dengan tekstur lembut dan warna elegan.",
     "colors": [
-      { "name": "Putih", "sku": "01111023", "thumbnail": "assets/images/produk/item1_white.png" },
-      { "name": "Merah", "sku": "01111223", "thumbnail": "assets/images/produk/item1_red.png" },
-      { "name": "Biru", "sku": "01111423", "thumbnail": "assets/images/produk/item1_blue.png" }
+      { "name": "Emas", "sku": "0080196000000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY EMAS.jpg" },
+      { "name": "Coklat Muda", "sku": "0080191200000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY COKLAT MUDA.jpg" },
+      { "name": "Biru Tua", "sku": "0080195800000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY BIRU TUA.jpg" },
+      { "name": "Abu Muda", "sku": "0080191000000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY ABU MUDA.jpg" },
+      { "name": "Cream", "sku": "0080190600000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY CREAM.jpg" },
+      { "name": "Hitam", "sku": "0080190900000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY HITAM.jpg" }
     ]
   },
   {
     "id": 2,
-    "title": "Lemari UPC Standard",
-    "base_code": "02121011",
-    "category": "Furniture",
-    "sub_category": "Lemari",
-    "detail": "Lemari model standard ...",
+    "title": "KP JKT SUNY 3D",
+    "base_code": "00902457000000",
+    "category": "KAIN POLOS SPRINGBED",
+    "sub_category": "KP JKT SUNY 3D",
+    "detail": "Kain polos springbed dengan desain 3D yang nyaman dan tahan lama.",
     "colors": [
-      { "name": "Coklat", "sku": "02121011", "thumbnail": "assets/images/produk/item2_brown.png" },
-      { "name": "Hitam",  "sku": "02121211", "thumbnail": "assets/images/produk/item2_black.png" }
+      { "name": "Biru", "sku": "00902457000000", "thumbnail": "assets/images/produk/KP JKT SUNY 3D Biru.jpg" },
+      { "name": "Merah",  "sku": "0090242300000", "thumbnail": "assets/images/produk/KP JKT SUNY 3D Merah.jpg" }
     ]
   },
   {
     "id": 3,
-    "title": "Rak Serbaguna",
-    "base_code": "03131001",
-    "category": "Storage",
-    "sub_category": "Rak",
-    "detail": "Rak serbaguna cocok untuk ruang tamu dan kantor.",
+    "title": "LIST SKT EKA 90 Y",
+    "base_code": "0160422360008",
+    "category": "PITA LIST",
+    "sub_category": "LIST SKT EKA",
+    "detail": "Pita list yang berguna untuk berbagai keperluan dekorasi kasur.",
     "colors": [
-      { "name": "Putih", "sku": "03131001", "thumbnail": "assets/images/produk/item3_white.png" },
-      { "name": "Hitam", "sku": "03131201", "thumbnail": "assets/images/produk/item3_black.png" }
+      { "name": "Merah Emas", "sku": "0160422360008", "thumbnail": "assets/images/produk/LIST SKT EKA MERAH EMAS 90 Y.jpg" },
+      { "name": "Biru Dongker Emas", "sku": "0160425960008", "thumbnail": "assets/images/produk/LIST SKT EKA BIRU DONGKER EMAS 90 Y.jpg" }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "PLS MIKA 210A X 100 Y EKA",
+    "base_code": "0170050000175",
+    "category": "PLASTIC",
+    "sub_category": "PLS MIKA",
+    "detail": "Plastik ini terbuat dari bahan berkualitas tinggi yang ramah lingkungan. Cocok untuk berbagai kebutuhan.",
+    "colors": [
+      { "name": "Putih", "sku": "0170050000175", "thumbnail": "assets/images/produk/PLS MIKA 0,10MM X 240CM X 100M.jpg" }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "KP SOFA BELUDRU LUXURY",
+    "base_code": "0080196000000",
+    "category": "KAIN POLOS SOFA",
+    "sub_category": "KP SOFA BELUDRU LUXURY",
+    "detail": "Kain polos SOFA BELUDRU LUXURY dengan tekstur lembut dan warna elegan.",
+    "colors": [
+      { "name": "Emas", "sku": "0080196000000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY EMAS.jpg" },
+      { "name": "Coklat Muda", "sku": "0080191200000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY COKLAT MUDA.jpg" },
+      { "name": "Biru Tua", "sku": "0080195800000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY BIRU TUA.jpg" },
+      { "name": "Abu Muda", "sku": "0080191000000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY ABU MUDA.jpg" },
+      { "name": "Cream", "sku": "0080190600000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY CREAM.jpg" },
+      { "name": "Hitam", "sku": "0080190900000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY HITAM.jpg" }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "KP JKT SUNY 3D",
+    "base_code": "00902457000000",
+    "category": "KAIN POLOS SPRINGBED",
+    "sub_category": "KP JKT SUNY 3D",
+    "detail": "Kain polos springbed dengan desain 3D yang nyaman dan tahan lama.",
+    "colors": [
+      { "name": "Biru", "sku": "00902457000000", "thumbnail": "assets/images/produk/KP JKT SUNY 3D Biru.jpg" },
+      { "name": "Merah",  "sku": "0090242300000", "thumbnail": "assets/images/produk/KP JKT SUNY 3D Merah.jpg" }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "LIST SKT EKA 90 Y",
+    "base_code": "0160422360008",
+    "category": "PITA LIST",
+    "sub_category": "LIST SKT EKA",
+    "detail": "Pita list yang berguna untuk berbagai keperluan dekorasi kasur.",
+    "colors": [
+      { "name": "Merah Emas", "sku": "0160422360008", "thumbnail": "assets/images/produk/LIST SKT EKA MERAH EMAS 90 Y.jpg" },
+      { "name": "Biru Dongker Emas", "sku": "0160425960008", "thumbnail": "assets/images/produk/LIST SKT EKA BIRU DONGKER EMAS 90 Y.jpg" }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "PLS MIKA 210A X 100 Y EKA",
+    "base_code": "0170050000175",
+    "category": "PLASTIC",
+    "sub_category": "PLS MIKA",
+    "detail": "Plastik ini terbuat dari bahan berkualitas tinggi yang ramah lingkungan. Cocok untuk berbagai kebutuhan.",
+    "colors": [
+      { "name": "Putih", "sku": "0170050000175", "thumbnail": "assets/images/produk/PLS MIKA 0,10MM X 240CM X 100M.jpg" }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "KP SOFA BELUDRU LUXURY",
+    "base_code": "0080196000000",
+    "category": "KAIN POLOS SOFA",
+    "sub_category": "KP SOFA BELUDRU LUXURY",
+    "detail": "Kain polos SOFA BELUDRU LUXURY dengan tekstur lembut dan warna elegan.",
+    "colors": [
+      { "name": "Emas", "sku": "0080196000000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY EMAS.jpg" },
+      { "name": "Coklat Muda", "sku": "0080191200000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY COKLAT MUDA.jpg" },
+      { "name": "Biru Tua", "sku": "0080195800000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY BIRU TUA.jpg" },
+      { "name": "Abu Muda", "sku": "0080191000000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY ABU MUDA.jpg" },
+      { "name": "Cream", "sku": "0080190600000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY CREAM.jpg" },
+      { "name": "Hitam", "sku": "0080190900000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY HITAM.jpg" }
+    ]
+  },
+  {
+    "id": 10,
+    "title": "KP JKT SUNY 3D",
+    "base_code": "00902457000000",
+    "category": "KAIN POLOS SPRINGBED",
+    "sub_category": "KP JKT SUNY 3D",
+    "detail": "Kain polos springbed dengan desain 3D yang nyaman dan tahan lama.",
+    "colors": [
+      { "name": "Biru", "sku": "00902457000000", "thumbnail": "assets/images/produk/KP JKT SUNY 3D Biru.jpg" },
+      { "name": "Merah",  "sku": "0090242300000", "thumbnail": "assets/images/produk/KP JKT SUNY 3D Merah.jpg" }
+    ]
+  },
+  {
+    "id": 11,
+    "title": "LIST SKT EKA 90 Y",
+    "base_code": "0160422360008",
+    "category": "PITA LIST",
+    "sub_category": "LIST SKT EKA",
+    "detail": "Pita list yang berguna untuk berbagai keperluan dekorasi kasur.",
+    "colors": [
+      { "name": "Merah Emas", "sku": "0160422360008", "thumbnail": "assets/images/produk/LIST SKT EKA MERAH EMAS 90 Y.jpg" },
+      { "name": "Biru Dongker Emas", "sku": "0160425960008", "thumbnail": "assets/images/produk/LIST SKT EKA BIRU DONGKER EMAS 90 Y.jpg" }
+    ]
+  },
+  {
+    "id": 12,
+    "title": "PLS MIKA 210A X 100 Y EKA",
+    "base_code": "0170050000175",
+    "category": "PLASTIC",
+    "sub_category": "PLS MIKA",
+    "detail": "Plastik ini terbuat dari bahan berkualitas tinggi yang ramah lingkungan. Cocok untuk berbagai kebutuhan.",
+    "colors": [
+      { "name": "Putih", "sku": "0170050000175", "thumbnail": "assets/images/produk/PLS MIKA 0,10MM X 240CM X 100M.jpg" }
+    ]
+  },
+  {
+    "id": 13,
+    "title": "KP SOFA BELUDRU LUXURY",
+    "base_code": "0080196000000",
+    "category": "KAIN POLOS SOFA",
+    "sub_category": "KP SOFA BELUDRU LUXURY",
+    "detail": "Kain polos SOFA BELUDRU LUXURY dengan tekstur lembut dan warna elegan.",
+    "colors": [
+      { "name": "Emas", "sku": "0080196000000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY EMAS.jpg" },
+      { "name": "Coklat Muda", "sku": "0080191200000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY COKLAT MUDA.jpg" },
+      { "name": "Biru Tua", "sku": "0080195800000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY BIRU TUA.jpg" },
+      { "name": "Abu Muda", "sku": "0080191000000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY ABU MUDA.jpg" },
+      { "name": "Cream", "sku": "0080190600000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY CREAM.jpg" },
+      { "name": "Hitam", "sku": "0080190900000", "thumbnail": "assets/images/produk/KP SOFA BELUDRU LUXURY HITAM.jpg" }
+    ]
+  },
+  {
+    "id": 14,
+    "title": "KP JKT SUNY 3D",
+    "base_code": "00902457000000",
+    "category": "KAIN POLOS SPRINGBED",
+    "sub_category": "KP JKT SUNY 3D",
+    "detail": "Kain polos springbed dengan desain 3D yang nyaman dan tahan lama.",
+    "colors": [
+      { "name": "Biru", "sku": "00902457000000", "thumbnail": "assets/images/produk/KP JKT SUNY 3D Biru.jpg" },
+      { "name": "Merah",  "sku": "0090242300000", "thumbnail": "assets/images/produk/KP JKT SUNY 3D Merah.jpg" }
+    ]
+  },
+  {
+    "id": 15,
+    "title": "LIST SKT EKA 90 Y",
+    "base_code": "0160422360008",
+    "category": "PITA LIST",
+    "sub_category": "LIST SKT EKA",
+    "detail": "Pita list yang berguna untuk berbagai keperluan dekorasi kasur.",
+    "colors": [
+      { "name": "Merah Emas", "sku": "0160422360008", "thumbnail": "assets/images/produk/LIST SKT EKA MERAH EMAS 90 Y.jpg" },
+      { "name": "Biru Dongker Emas", "sku": "0160425960008", "thumbnail": "assets/images/produk/LIST SKT EKA BIRU DONGKER EMAS 90 Y.jpg" }
+    ]
+  },
+  {
+    "id": 16,
+    "title": "PLS MIKA 210A X 100 Y EKA",
+    "base_code": "0170050000175",
+    "category": "PLASTIC",
+    "sub_category": "PLS MIKA",
+    "detail": "Plastik ini terbuat dari bahan berkualitas tinggi yang ramah lingkungan. Cocok untuk berbagai kebutuhan.",
+    "colors": [
+      { "name": "Putih", "sku": "0170050000175", "thumbnail": "assets/images/produk/PLS MIKA 0,10MM X 240CM X 100M.jpg" }
     ]
   }
 ]

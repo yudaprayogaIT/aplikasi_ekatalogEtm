@@ -1,5 +1,7 @@
 // lib/features/post_login/ui/home_screen.dart
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:ekatalog_etm/features/product/ui/product_list_page.dart';
 import 'package:ekatalog_etm/features/product/ui/product_detail_page.dart';
 import 'package:ekatalog_etm/features/product/widgets/product_card.dart';
@@ -15,27 +17,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // menyimpan status favorite tiap produk berdasar product.id
   final Map<int, bool> _favorites = {};
-
-  // gambar dan sample product (pakai same assets names seperti ProductListPage)
-  final List<String> images = [
-    'assets/images/produk/item1.png',
-    'assets/images/produk/item2.png',
-    'assets/images/produk/item3.png',
-    'assets/images/produk/item4.png',
-  ];
-
-  late final List<Product> _sampleProducts;
+  final List<Product> _sampleProducts = [];
 
   @override
   void initState() {
     super.initState();
-    // buat sample products (6 items) — setiap product membawa imageAsset
-    _sampleProducts = List.generate(6, (i) {
-      final id = i;
-      final image = images.isNotEmpty ? images[id % images.length] : null;
-      return Product(id: id, title: 'Lemari UPC #${id + 1}', imageAsset: image);
+    _loadSampleProducts();
+  }
+
+  Future<void> _loadSampleProducts() async {
+    final jsonStr = await rootBundle.loadString('assets/data/products.json');
+    final List<dynamic> arr = jsonDecode(jsonStr);
+    final all = arr.map((m) => Product.fromMap(m as Map<String, dynamic>)).toList();
+    setState(() {
+      _sampleProducts.clear();
+      _sampleProducts.addAll(all.take(6)); // ambil 6 pertama
     });
   }
 
@@ -45,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // small card tetap statis
   Widget _smallCard(String title, {String subtitle = '', Widget? leading}) {
     return SizedBox(
       width: 189,
@@ -109,7 +105,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFFB11F23);
 
-    // kalkulasi padding bawah dinamis supaya tidak terjadi overflow karena BottomNavigationBar
     final bottomInset = MediaQuery.of(context).viewPadding.bottom;
     final bottomPadding = bottomInset + kBottomNavigationBarHeight + 16;
 
@@ -132,10 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.pushNamed(context, '/profile');
                 },
               ),
-
               const SizedBox(height: 12),
-
-              // large image placeholder
               Container(
                 height: 240,
                 decoration: BoxDecoration(
@@ -146,10 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Icon(Icons.image, size: 60, color: Colors.grey),
                 ),
               ),
-
               const SizedBox(height: 12),
-
-              // small cards
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -174,10 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 12),
-
-              // company card
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -224,10 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 36,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/home',
-                              );
+                              Navigator.pushNamed(context, '/home');
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: primaryColor,
@@ -252,10 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 18),
-
-              // Produk Baru header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -289,10 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 8),
-
-              // horizontal product list: tinggi 218, gap 25
               SizedBox(
                 height: 218,
                 child: ListView.separated(
@@ -316,7 +293,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-
               const SizedBox(height: 28),
             ],
           ),

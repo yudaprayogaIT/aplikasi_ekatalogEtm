@@ -13,16 +13,6 @@ class ProductDetailPage extends StatefulWidget {
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
   int _selectedThumbnail = 0;
-  String _selectedColor = 'Putih';
-  final List<String> _colors = ['Putih', 'Hitam', 'Biru', 'Coklat'];
-
-  // sesuaikan nama file jika perlu (sama seperti di ProductListPage)
-  final List<String> images = [
-    'assets/images/produk/item1.png',
-    'assets/images/produk/item2.png',
-    'assets/images/produk/item3.png',
-    'assets/images/produk/item4.png',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +22,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     final maxAvailableWidth = screenWidth - (horizontalPadding * 2);
     final imageSize = math.min(370.0, math.max(0.0, maxAvailableWidth));
 
-    // build thumbnail list starting from product id to have consistent images per product
-    final startIndex = images.isNotEmpty ? (p.id % images.length) : 0;
-    final thumbs = images.isNotEmpty
-        ? List.generate(images.length, (i) => images[(startIndex + i) % images.length])
-        : <String>[];
+    final thumbs = p.colors.map((c) => c.thumbnail).toList();
+    final mainImage = (thumbs.isNotEmpty && _selectedThumbnail >= 0 && _selectedThumbnail < thumbs.length)
+        ? thumbs[_selectedThumbnail]
+        : null;
 
-    // determine which image should show in main view
-    final mainImage = thumbs.isNotEmpty ? thumbs[_selectedThumbnail.clamp(0, thumbs.length - 1)] : p.imageAsset;
+    final selectedColor = (_selectedThumbnail >= 0 && _selectedThumbnail < p.colors.length) ? p.colors[_selectedThumbnail] : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -127,10 +115,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               child: Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: _colors.map((c) {
-                  final selected = c == _selectedColor;
+                children: List.generate(p.colors.length, (i) {
+                  final c = p.colors[i];
+                  final selected = i == _selectedThumbnail;
                   return GestureDetector(
-                    onTap: () => setState(() => _selectedColor = c),
+                    onTap: () => setState(() => _selectedThumbnail = i),
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
@@ -139,28 +128,28 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         border: Border.all(color: selected ? Colors.black87 : Colors.grey.shade300),
                       ),
                       child: Text(
-                        c,
+                        c.name,
                         style: TextStyle(fontWeight: selected ? FontWeight.w700 : FontWeight.w500),
                       ),
                     ),
                   );
-                }).toList(),
+                }),
               ),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
 
-            // Item Name
+            // Nama item + SKU
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
-              child: const Text('Item Name', style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(p.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
             ),
 
             const SizedBox(height: 4),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
-              child: Text(p.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              child: Text('Kode: ${selectedColor?.sku ?? p.baseCode}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
             ),
 
             const SizedBox(height: 12),
@@ -175,9 +164,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
-              child: const Text(
-                'Lemari ini mengandung nilai estetika bla.. bla.. bla. Deskripsi produk dapat diisi lebih lengkap di sini. Spesifikasi, ukuran, bahan, dan informasi lain dapat ditambahkan.',
-                style: TextStyle(height: 1.4),
+              child: Text(
+                p.detail,
+                style: const TextStyle(height: 1.4),
                 textAlign: TextAlign.left,
               ),
             ),
@@ -191,7 +180,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Tambahkan ke keranjang')));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Tambahkan ke keranjang: ${p.title} (${selectedColor?.sku ?? p.baseCode})')),
+                    );
                   },
                   style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFB11F23)),
                   child: const Padding(

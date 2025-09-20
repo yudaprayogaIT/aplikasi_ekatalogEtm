@@ -1,5 +1,7 @@
 // lib/features/product/ui/product_list_page.dart
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:ekatalog_etm/models/product.dart';
 import 'package:ekatalog_etm/features/product/widgets/product_card.dart';
 import 'product_detail_page.dart';
@@ -12,6 +14,7 @@ class ProductListPage extends StatefulWidget {
 }
 
 class _ProductListPageState extends State<ProductListPage> {
+  final List<Product> _allProducts = [];
   final List<Product> _items = [];
   final Map<int, bool> _favorites = {};
   final ScrollController _scrollController = ScrollController();
@@ -19,32 +22,29 @@ class _ProductListPageState extends State<ProductListPage> {
   bool _hasMore = true;
 
   static const int _pageSize = 10;
-  static const int _maxItems = 50; // simulasi total produk
-
-  // ubah sesuai nama file yang kamu punya
-  final List<String> images = [
-    'assets/images/produk/item1.png',
-    'assets/images/produk/item2.png',
-    'assets/images/produk/item3.png',
-    'assets/images/produk/item4.png',
-  ];
 
   @override
   void initState() {
     super.initState();
-    _loadInitial();
+    _loadProductsJson().then((_) {
+      _appendItems();
+    });
     _scrollController.addListener(_onScroll);
+  }
+
+  Future<void> _loadProductsJson() async {
+    final jsonStr = await rootBundle.loadString('assets/data/products.json');
+    final List<dynamic> arr = jsonDecode(jsonStr) as List<dynamic>;
+    _allProducts.clear();
+    _allProducts.addAll(arr.map((m) => Product.fromMap(m as Map<String, dynamic>)));
+    // optional: sort or shuffle
+    setState(() {});
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  void _loadInitial() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    _appendItems();
   }
 
   void _onScroll() {
@@ -57,31 +57,25 @@ class _ProductListPageState extends State<ProductListPage> {
 
   void _appendItems() async {
     if (_loadingMore) return;
-    setState(() => _loadingMore = true);
-
-    await Future.delayed(const Duration(milliseconds: 600)); // simulasi network
-
-    final start = _items.length;
-    final nextCount = (_items.length + _pageSize) <= _maxItems ? _pageSize : (_maxItems - _items.length);
-
-    if (nextCount <= 0) {
+    if (_items.length >= _allProducts.length) {
       setState(() {
         _hasMore = false;
-        _loadingMore = false;
       });
       return;
     }
 
-    final newItems = List.generate(nextCount, (i) {
-      final id = start + i;
-      final image = images.isNotEmpty ? images[id % images.length] : null;
-      return Product(id: id, title: 'Lemari UPC #${id + 1}', imageAsset: image);
-    });
+    setState(() => _loadingMore = true);
+
+    await Future.delayed(const Duration(milliseconds: 400));
+
+    final start = _items.length;
+    final nextCount = ((_items.length + _pageSize) <= _allProducts.length) ? _pageSize : (_allProducts.length - _items.length);
+    final newItems = _allProducts.sublist(start, start + nextCount);
 
     setState(() {
       _items.addAll(newItems);
       _loadingMore = false;
-      if (_items.length >= _maxItems) _hasMore = false;
+      if (_items.length >= _allProducts.length) _hasMore = false;
     });
   }
 
@@ -123,19 +117,20 @@ class _ProductListPageState extends State<ProductListPage> {
                       isFavorite: _favorites[p.id] ?? false,
                       onFavoriteChanged: _onFavoriteChanged,
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(product: p)));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => ProductDetailPage(product: p)),
+                        );
                       },
                     );
                   },
                 ),
               ),
-
               if (_loadingMore)
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
                 ),
-
               if (!_hasMore && !_loadingMore)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12.0),
