@@ -2,174 +2,144 @@
 import 'package:flutter/material.dart';
 import 'package:ekatalog_etm/models/product.dart';
 
-typedef FavoriteCallback = void Function(int productId, bool isFavorite);
+typedef FavoriteChanged = void Function(int productId, bool isFav);
 
-class ProductCard extends StatefulWidget {
+/// Konstanta tinggi card agar konsisten di semua tempat.
+const double productCardHeight = 260.0;
+
+class ProductCard extends StatelessWidget {
   final Product product;
   final bool isFavorite;
-  final FavoriteCallback onFavoriteChanged;
+  final FavoriteChanged onFavoriteChanged;
   final VoidCallback onTap;
 
   const ProductCard({
-    super.key,
+    Key? key,
     required this.product,
     required this.isFavorite,
     required this.onFavoriteChanged,
     required this.onTap,
-  });
-
-  @override
-  State<ProductCard> createState() => _ProductCardState();
-}
-
-class _ProductCardState extends State<ProductCard> {
-  bool _anim = false;
-
-  void _onFavPressed() {
-    final newVal = !widget.isFavorite;
-    setState(() => _anim = true);
-    Future.delayed(const Duration(milliseconds: 180), () {
-      if (!mounted) return;
-      setState(() => _anim = false);
-      widget.onFavoriteChanged(widget.product.id, newVal);
-    });
-  }
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final isFav = widget.isFavorite;
-    final thumbnail = widget.product.defaultColor?.thumbnail;
+    const primaryColor = Color(0xFFB11F23);
+    final thumbnail = product.colors.isNotEmpty ? product.colors[0].thumbnail : 'assets/images/placeholder.png';
 
     return SizedBox(
       width: 160,
-      height: 218,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: Card(
-          margin: EdgeInsets.zero,
-          color: Colors.white,
-          elevation: 1.5,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          clipBehavior: Clip.hardEdge,
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SizedBox(
-                    height: 160,
-                    width: double.infinity,
-                    child: thumbnail != null
-                        ? Image.asset(
-                            thumbnail,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: 160,
-                          )
-                        : Container(
-                            color: Colors.grey[200],
-                            child: const Center(
-                              child: Icon(Icons.image, size: 40, color: Colors.grey),
-                            ),
-                          ),
-                  ),
-                  SizedBox(
-                    height: 58,
-                    child: Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  widget.product.title,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12,
-                                    fontFamily: 'poppins',
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  'Lihat',
-                                  style: TextStyle(
-                                    color: const Color(0xffB11F23),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Lato',
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            width: 34,
-                            height: 34,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey.shade300),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black12,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 1),
-                                ),
-                              ],
-                            ),
-                            child: const Center(
-                              child: Icon(Icons.arrow_forward_sharp, size: 20),
-                            ),
-                          ),
-                        ],
+      height: productCardHeight,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Card(
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            clipBehavior: Clip.hardEdge,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // IMAGE AREA (tetap 160 tinggi agar proporsi rapi)
+                SizedBox(
+                  height: 160,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Container(
+                        color: Colors.grey[200],
+                        child: Image.asset(
+                          thumbnail,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.broken_image, size: 40, color: Colors.grey)),
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: GestureDetector(
+                          onTap: () => onFavoriteChanged(product.id, !isFavorite),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.95),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+                              ],
+                            ),
+                            padding: const EdgeInsets.all(6),
+                            child: Icon(
+                              isFavorite ? Icons.favorite : Icons.favorite_border,
+                              size: 18,
+                              color: isFavorite ? Colors.red : Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: AnimatedScale(
-                  scale: _anim ? 1.25 : 1.0,
-                  duration: const Duration(milliseconds: 180),
-                  curve: Curves.easeOutBack,
-                  child: Container(
-                    width: 34,
-                    height: 34,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.95),
-                      shape: BoxShape.circle,
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 3,
-                          offset: Offset(0, 1),
+                ),
+
+                // BOTTOM INFO AREA (mengisi sisa tinggi)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+                    child: Row(
+                      children: [
+                        // title + "Lihat"
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                product.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontFamily: 'poppins',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 13,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Lihat',
+                                style: TextStyle(
+                                  fontFamily: 'lato',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(width: 8),
+
+                        // small arrow circle box
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(18),
+                            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 2, offset: Offset(0, 1))],
+                          ),
+                          child: const Icon(
+                            Icons.arrow_forward,
+                            size: 18,
+                            color: Colors.black54,
+                          ),
                         ),
                       ],
                     ),
-                    child: IconButton(
-                      padding: EdgeInsets.zero,
-                      icon: Icon(
-                        isFav ? Icons.favorite : Icons.favorite_border,
-                        size: 18,
-                        color: isFav ? Colors.red : Colors.black87,
-                      ),
-                      onPressed: _onFavPressed,
-                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

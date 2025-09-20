@@ -45,6 +45,7 @@ dependencies:
   shared_preferences: ^2.5.3
   path_provider: ^2.1.5
   flutter_image_compress: ^2.4.0
+  carousel_slider: ^5.1.1
 
 env:
   sdk: '>=2.18.0 <3.0.0'
