@@ -73,12 +73,4 @@ class Product {
     );
   }
 
-  /// apakah produk tersedia di [branchFilter]? (case-insensitive)
-  bool availableInBranch(String branchFilter) {
-    if (branchFilter.isEmpty) return true; // kosong => semua cabang
-    for (var b in branches) {
-      if (b.toLowerCase().trim() == branchFilter.toLowerCase().trim()) return true;
-    }
-    return false;
-  }
 }

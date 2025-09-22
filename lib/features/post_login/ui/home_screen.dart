@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final Map<int, bool> _favorites = {};
   final List<Product> _sampleProducts = [];
-  String currentBranch = 'Bogor';
+  String currentBranch = 'Sidoarjo';
 
   @override
   void initState() {
@@ -32,11 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
       final jsonStr = await rootBundle.loadString('assets/data/products.json');
       final List<dynamic> arr = jsonDecode(jsonStr);
       final all = arr.map((m) => Product.fromMap(m as Map<String, dynamic>)).toList();
-      final filtered = all.where((p) => p.availableInBranch(currentBranch)).toList();
 
       setState(() {
         _sampleProducts.clear();
-        _sampleProducts.addAll(filtered.take(6));
+        _sampleProducts.addAll(all.take(6));
       });
     } catch (e) {
       debugPrint('Error loading products.json: $e');

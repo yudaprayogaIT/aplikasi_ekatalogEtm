@@ -37,9 +37,8 @@ class _ProductListPageState extends State<ProductListPage> {
       final jsonStr = await rootBundle.loadString('assets/data/products.json');
       final List<dynamic> arr = jsonDecode(jsonStr) as List<dynamic>;
       final all = arr.map((m) => Product.fromMap(m as Map<String, dynamic>)).toList();
-      final filtered = all.where((p) => p.availableInBranch(widget.branchFilter)).toList();
       _allProducts.clear();
-      _allProducts.addAll(filtered);
+      _allProducts.addAll(all);
       setState(() {});
     } catch (e) {
       debugPrint('Error load products.json (list): $e');
@@ -86,10 +85,10 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final title = widget.branchFilter.isEmpty ? 'Semua Produk' : 'Produk - ${widget.branchFilter}';
+    final title = widget.branchFilter.isEmpty ? 'Semua Produk' : 'Produk';
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: const Color(0xFFB11F23), title: Text(title), leading: const BackButton(color: Colors.white)),
+      appBar: AppBar(backgroundColor: const Color(0xFFB11F23), title: Text(title, style: TextStyle(color: Color(0xFFFFFFFF)),), leading: const BackButton(color: Colors.white)),
       body: Padding(
         padding: const EdgeInsets.all(12),
         child: _items.isEmpty
