@@ -2,6 +2,8 @@
 import 'dart:io';
 import 'package:ekatalog_etm/utils/avatar_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../services/auth_service.dart';
 
 
 class ProfileScreen extends StatefulWidget {
@@ -13,8 +15,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String? _avatarPath;
   Color _bgColor = Colors.transparent;
-  String userName = 'Yanto Simatupang';
-  String phone = '081212131415';
 
   @override
   void initState() {
@@ -32,6 +32,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+final auth = Provider.of<AuthService>(context);
+final ownerName = auth.owner != null
+        ? (auth.owner!['owner_name']?.toString() ?? 'User')
+        : 'Guest';
+        final phoneNumber = auth.phoneNumber ?? '';
+
     return Scaffold(
       appBar: AppBar(title: const Text('Profil'), backgroundColor: Colors.red.shade700),
       body: SingleChildScrollView(
@@ -47,9 +53,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           const SizedBox(height: 12),
-          Text(userName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          Text(ownerName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           const SizedBox(height: 4),
-          Text(phone, style: const TextStyle(color: Colors.grey)),
+          Text(phoneNumber, style: const TextStyle(color: Colors.grey)),
           const SizedBox(height: 20),
           ElevatedButton.icon(
             onPressed: () async {
@@ -60,8 +66,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             label: const Text('Ubah Avatar'),
           ),
           const SizedBox(height: 20),
-          ListTile(title: const Text('Nama Lengkap'), subtitle: Text(userName), trailing: const Icon(Icons.chevron_right)),
-          ListTile(title: const Text('Nomor Handphone'), subtitle: Text(phone), trailing: const Icon(Icons.chevron_right)),
+          ListTile(title: const Text('Nama Lengkap'), subtitle: Text(ownerName), trailing: const Icon(Icons.chevron_right)),
+          ListTile(title: const Text('Nomor Handphone'), subtitle: Text(phoneNumber), trailing: const Icon(Icons.chevron_right)),
         ]),
       ),
     );

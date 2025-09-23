@@ -36,6 +36,9 @@ class AuthService extends ChangeNotifier {
   /// Daerah / region dari branch
   String? get daerah => _branch?['daerah']?.toString();
 
+    /// Nomor Telepon owner
+  String? get phoneNumber => _owner?['phone_number']?.toString();
+
   // OTP demo (tidak mengirim SMS, hanya simpan untuk verifikasi lokal)
   String? _lastOtp;
   String? _pendingPhone;
