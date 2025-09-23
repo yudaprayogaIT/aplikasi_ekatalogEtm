@@ -41,7 +41,7 @@ class ProductCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // IMAGE AREA (tetap 160 tinggi agar proporsi rapi)
+                // IMAGE AREA (static: always warna pertama)
                 SizedBox(
                   height: 160,
                   child: Stack(
@@ -81,7 +81,7 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
 
-                // BOTTOM INFO AREA (mengisi sisa tinggi)
+                // BOTTOM INFO AREA
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),

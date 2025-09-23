@@ -28,24 +28,24 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  carousel_slider: ^5.1.1
+  firebase_core: ^3.6.0
   flutter:
     sdk: flutter
-  firebase_core: ^3.6.0
   firebase_auth: ^5.3.1
   flutter_bloc: ^9.1.1
-  provider: ^6.0.5
+  flutter_image_compress: ^2.4.0
+  flutter_secure_storage: ^9.2.4
   flutter_svg: ^1.1.6
+  font_awesome_flutter: ^10.4.0
+  image_picker: ^1.2.0
   intl: ^0.18.0
+  local_auth: ^2.3.0
+  path_provider: ^2.1.5
+  provider: ^6.0.5
+  shared_preferences: ^2.5.3
   supabase_flutter: ^2.10.0
   url_launcher: ^6.1.10
-  font_awesome_flutter: ^10.4.0
-  local_auth: ^2.3.0
-  flutter_secure_storage: ^9.2.4
-  image_picker: ^1.2.0
-  shared_preferences: ^2.5.3
-  path_provider: ^2.1.5
-  flutter_image_compress: ^2.4.0
-  carousel_slider: ^5.1.1
 
 env:
   sdk: '>=2.18.0 <3.0.0'

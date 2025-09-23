@@ -1,9 +1,9 @@
 // lib/features/post_login/ui/home_screen.dart
 import 'dart:convert';
+import 'package:ekatalog_etm/features/product/ui/product_detail_page.dart';
+import 'package:ekatalog_etm/features/product/ui/product_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:ekatalog_etm/features/product/ui/product_list_page.dart';
-import 'package:ekatalog_etm/features/product/ui/product_detail_page.dart';
 import 'package:ekatalog_etm/features/product/widgets/product_card.dart';
 import 'package:ekatalog_etm/models/product.dart';
 import '../../../widgets/bottom_nav.dart';
@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final Map<int, bool> _favorites = {};
   final List<Product> _sampleProducts = [];
-  String currentBranch = 'Sidoarjo';
+  String currentBranch = 'Bogor'; // contoh, bisa diambil dari profil
 
   @override
   void initState() {
@@ -35,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       setState(() {
         _sampleProducts.clear();
+        // ambil 6 pertama (produk baru) - ini menampilkan newest berdasarkan urutan JSON
         _sampleProducts.addAll(all.take(6));
       });
     } catch (e) {
@@ -137,7 +138,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 110,
                         height: 36,
                         child: ElevatedButton(
-                          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProductListPage(branchFilter: currentBranch))),
+                          onPressed: () {
+                            // BUKA halaman filterable per-branch (tanpa bloc)
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => ProductListPage(mode: ProductListMode.filterable)));
+                          },
                           style: ElevatedButton.styleFrom(backgroundColor: primaryColor, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), padding: EdgeInsets.zero),
                           child: const Text('Lihat Produk', style: TextStyle(color: Colors.white, fontFamily: 'lato', fontWeight: FontWeight.w700, fontSize: 12)),
                         ),
@@ -149,13 +153,18 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 18),
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 const Text('Produk Baru', style: TextStyle(fontWeight: FontWeight.bold, color: primaryColor, fontFamily: 'poppins', fontSize: 14)),
-                TextButton(onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProductListPage(branchFilter: ''))), child: const Text('Lihat Semua', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, fontFamily: 'poppins', color: Color.fromARGB(99, 0, 0, 0)))),
+                TextButton(
+                    onPressed: () {
+                      // Lihat Semua -> buka halaman ALL PRODUCTS tanpa filter
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => ProductListPage(mode: ProductListMode.newProducts)));
+                    },
+                    child: const Text('Lihat Semua', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, fontFamily: 'poppins', color: Color.fromARGB(99, 0, 0, 0)))),
               ]),
               const SizedBox(height: 8),
 
-              // HORIZONTAL CARDS -> gunakan konstanta tinggi dari ProductCard
+              // HORIZONTAL CARDS -> tampilkan produk baru (statik gambar)
               SizedBox(
-                height: productCardHeight,
+                height: 218,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: _sampleProducts.length,

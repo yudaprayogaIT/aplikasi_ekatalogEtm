@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "tipe": "Material",
     "title": "KP SOFA BELUDRU LUXURY",
     "base_code": "0080196000000",
     "category": "KAIN POLOS SOFA",
@@ -18,6 +19,7 @@
   },
   {
     "id": 2,
+    "tipe": "Material",
     "title": "KP JKT SUNY 3D",
     "base_code": "00902457000000",
     "category": "KAIN POLOS SPRINGBED",
@@ -31,6 +33,7 @@
   },
   {
     "id": 3,
+    "tipe": "Material",
     "title": "LIST SKT EKA 90 Y",
     "base_code": "0160422360008",
     "category": "PITA LIST",
@@ -44,6 +47,7 @@
   },
   {
     "id": 4,
+    "tipe": "Material",
     "title": "PLS MIKA 210A X 100 Y EKA",
     "base_code": "0170050000175",
     "category": "PLASTIC",
@@ -56,6 +60,7 @@
   },
   {
     "id": 5,
+    "tipe": "Material",
     "title": "KP SOFA BELUDRU LUXURY",
     "base_code": "0080196000000",
     "category": "KAIN POLOS SOFA",
@@ -73,6 +78,7 @@
   },
   {
     "id": 6,
+    "tipe": "Material",
     "title": "KP JKT SUNY 3D",
     "base_code": "00902457000000",
     "category": "KAIN POLOS SPRINGBED",
@@ -86,6 +92,7 @@
   },
   {
     "id": 7,
+    "tipe": "Material",
     "title": "LIST SKT EKA 90 Y",
     "base_code": "0160422360008",
     "category": "PITA LIST",
@@ -99,6 +106,7 @@
   },
   {
     "id": 8,
+    "tipe": "Material",
     "title": "PLS MIKA 210A X 100 Y EKA",
     "base_code": "0170050000175",
     "category": "PLASTIC",
@@ -111,6 +119,7 @@
   },
   {
     "id": 9,
+    "tipe": "Material",
     "title": "KP SOFA BELUDRU LUXURY",
     "base_code": "0080196000000",
     "category": "KAIN POLOS SOFA",
@@ -128,6 +137,7 @@
   },
   {
     "id": 10,
+    "tipe": "Material",
     "title": "KP JKT SUNY 3D",
     "base_code": "00902457000000",
     "category": "KAIN POLOS SPRINGBED",
@@ -141,6 +151,7 @@
   },
   {
     "id": 11,
+    "tipe": "Material",
     "title": "LIST SKT EKA 90 Y",
     "base_code": "0160422360008",
     "category": "PITA LIST",
@@ -154,6 +165,7 @@
   },
   {
     "id": 12,
+    "tipe": "Material",
     "title": "PLS MIKA 210A X 100 Y EKA",
     "base_code": "0170050000175",
     "category": "PLASTIC",
@@ -166,6 +178,7 @@
   },
   {
     "id": 13,
+    "tipe": "Material",
     "title": "KP SOFA BELUDRU LUXURY",
     "base_code": "0080196000000",
     "category": "KAIN POLOS SOFA",
@@ -183,6 +196,7 @@
   },
   {
     "id": 14,
+    "tipe": "Material",
     "title": "KP JKT SUNY 3D",
     "base_code": "00902457000000",
     "category": "KAIN POLOS SPRINGBED",
@@ -196,6 +210,7 @@
   },
   {
     "id": 15,
+    "tipe": "Material",
     "title": "LIST SKT EKA 90 Y",
     "base_code": "0160422360008",
     "category": "PITA LIST",
@@ -209,6 +224,7 @@
   },
   {
     "id": 16,
+    "tipe": "Material",
     "title": "PLS MIKA 210A X 100 Y EKA",
     "base_code": "0170050000175",
     "category": "PLASTIC",

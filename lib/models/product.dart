@@ -21,6 +21,7 @@ class ProductColor {
 
 class Product {
   final int id;
+  final String tipe; // new field
   final String title;
   final String baseCode;
   final String category;
@@ -31,6 +32,7 @@ class Product {
 
   Product({
     required this.id,
+    required this.tipe,
     required this.title,
     required this.baseCode,
     required this.category,
@@ -63,14 +65,23 @@ class Product {
 
     return Product(
       id: (m['id'] is int) ? m['id'] as int : int.tryParse('${m['id']}') ?? 0,
-      title: m['title'] ?? '',
-      baseCode: m['base_code'] ?? '',
-      category: m['category'] ?? '',
-      subCategory: m['sub_category'] ?? '',
-      detail: m['detail'] ?? '',
+      tipe: (m['tipe'] ?? '') as String,
+      title: (m['title'] ?? '') as String,
+      baseCode: (m['base_code'] ?? '') as String,
+      category: (m['category'] ?? '') as String,
+      subCategory: (m['sub_category'] ?? m['subCategory'] ?? '') as String,
+      detail: (m['detail'] ?? '') as String,
       colors: colorsList,
       branches: branches,
     );
   }
 
+  /// check availability on branch (case-insensitive)
+  bool availableInBranch(String branchFilter) {
+    if (branchFilter.isEmpty) return true;
+    for (var b in branches) {
+      if (b.toLowerCase().trim() == branchFilter.toLowerCase().trim()) return true;
+    }
+    return false;
+  }
 }
