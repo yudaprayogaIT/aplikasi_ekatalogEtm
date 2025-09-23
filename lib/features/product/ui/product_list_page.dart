@@ -9,7 +9,7 @@ import 'package:ekatalog_etm/models/product.dart';
 import 'package:ekatalog_etm/features/product/widgets/product_card.dart';
 import 'package:ekatalog_etm/features/product/ui/product_detail_page.dart';
 
-const double productCardHeight = 260;
+const double productCardHeight = 210;
 
 enum ProductListMode { filterable, newProducts }
 

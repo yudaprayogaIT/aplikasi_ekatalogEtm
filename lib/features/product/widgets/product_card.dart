@@ -5,7 +5,7 @@ import 'package:ekatalog_etm/models/product.dart';
 typedef FavoriteChanged = void Function(int productId, bool isFav);
 
 /// Konstanta tinggi card agar konsisten di semua tempat.
-const double productCardHeight = 260.0;
+const double productCardHeight = 210;
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -23,7 +23,10 @@ class ProductCard extends StatelessWidget {
 
   String _defaultThumbnail() {
     if (product.colors.isEmpty) return 'assets/images/placeholder.png';
-    final def = product.colors.firstWhere((c) => c.isDefault, orElse: () => product.colors.first);
+    final def = product.colors.firstWhere(
+      (c) => c.isDefault,
+      orElse: () => product.colors.first,
+    );
     return def.thumbnail;
   }
 
@@ -42,7 +45,9 @@ class ProductCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: Card(
             elevation: 2,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             clipBehavior: Clip.hardEdge,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -58,25 +63,38 @@ class ProductCard extends StatelessWidget {
                         child: Image.asset(
                           thumbnail,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => const Center(child: Icon(Icons.broken_image, size: 40, color: Colors.grey)),
+                          errorBuilder: (_, __, ___) => const Center(
+                            child: Icon(
+                              Icons.broken_image,
+                              size: 40,
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
                       ),
                       Positioned(
                         top: 8,
                         right: 8,
                         child: GestureDetector(
-                          onTap: () => onFavoriteChanged(product.id, !isFavorite),
+                          onTap: () =>
+                              onFavoriteChanged(product.id, !isFavorite),
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.95),
                               shape: BoxShape.circle,
                               boxShadow: [
-                                BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 2),
+                                ),
                               ],
                             ),
                             padding: const EdgeInsets.all(6),
                             child: Icon(
-                              isFavorite ? Icons.favorite : Icons.favorite_border,
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
                               size: 18,
                               color: isFavorite ? Colors.red : Colors.black87,
                             ),
@@ -89,9 +107,10 @@ class ProductCard extends StatelessWidget {
 
                 // BOTTOM INFO AREA (mengisi sisa tinggi)
                 Expanded(
+                  // height: 40,
                   child: Container(
-                        color: const Color(0xffffffff),
-                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+                    color: const Color(0xffffffff),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Row(
                       children: [
                         // title + "Lihat"
@@ -100,17 +119,18 @@ class ProductCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                product.title,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontFamily: 'poppins',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13,
+                              Expanded(
+                                child: Text(
+                                  product.title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontFamily: 'poppins',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 6),
                               Text(
                                 'Lihat',
                                 style: TextStyle(
@@ -120,6 +140,7 @@ class ProductCard extends StatelessWidget {
                                   color: primaryColor,
                                 ),
                               ),
+                              const SizedBox(height: 6),
                             ],
                           ),
                         ),

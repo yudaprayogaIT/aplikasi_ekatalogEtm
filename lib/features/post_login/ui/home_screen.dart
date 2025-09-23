@@ -9,6 +9,8 @@ import 'package:ekatalog_etm/models/product.dart';
 import '../../../widgets/bottom_nav.dart';
 import '../../../widgets/profile_header.dart';
 
+const double productCardHeight = 210;
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -31,7 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final jsonStr = await rootBundle.loadString('assets/data/products.json');
       final List<dynamic> arr = jsonDecode(jsonStr);
-      final all = arr.map((m) => Product.fromMap(m as Map<String, dynamic>)).toList();
+      final all = arr
+          .map((m) => Product.fromMap(m as Map<String, dynamic>))
+          .toList();
 
       setState(() {
         _sampleProducts.clear();
@@ -64,19 +68,42 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (leading != null) SizedBox(width: 40, height: 40, child: ClipOval(child: leading))
-              else const SizedBox(
-                width: 40,
-                height: 40,
-                child: CircleAvatar(backgroundColor: Color(0xFFFDD100), child: Icon(Icons.card_giftcard, color: Colors.white, size: 20)),
-              ),
+              if (leading != null)
+                SizedBox(width: 40, height: 40, child: ClipOval(child: leading))
+              else
+                const SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: CircleAvatar(
+                    backgroundColor: Color(0xFFFDD100),
+                    child: Icon(
+                      Icons.card_giftcard,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
               const SizedBox(width: 12),
               Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontFamily: 'poppins', fontSize: 14)),
-                  if (subtitle.isNotEmpty) Text(subtitle, style: const TextStyle(color: Color(0xCE000000), fontSize: 12)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'poppins',
+                      fontSize: 14,
+                    ),
+                  ),
+                  if (subtitle.isNotEmpty)
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: Color(0xCE000000),
+                        fontSize: 12,
+                      ),
+                    ),
                 ],
               ),
             ],
@@ -97,90 +124,197 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: const BottomNavBar(currentIndex: 0),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(left: 14, right: 14, top: 12, bottom: bottomPadding),
+          padding: EdgeInsets.only(
+            left: 14,
+            right: 14,
+            top: 12,
+            bottom: bottomPadding,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              ProfileHeader(onTapProfile: () => Navigator.pushNamed(context, '/profile')),
+              ProfileHeader(
+                onTapProfile: () => Navigator.pushNamed(context, '/profile'),
+              ),
               const SizedBox(height: 12),
               Container(
-                height: 240,
-                decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(12)),
-                child: const Center(child: Icon(Icons.image, size: 60, color: Colors.grey)),
+                height: 210,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Center(
+                  child: Icon(Icons.image, size: 60, color: Colors.grey),
+                ),
               ),
               const SizedBox(height: 12),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(children: [
-                  _smallCard('Program', subtitle: 'Loyalty', leading: Image.asset('assets/images/iconProgram.png', fit: BoxFit.cover)),
-                  const SizedBox(width: 10),
-                  _smallCard('Eka Poin', subtitle: '30000', leading: Image.asset('assets/images/iconPoin.png', fit: BoxFit.cover)),
-                ]),
+                child: Row(
+                  children: [
+                    _smallCard(
+                      'Program',
+                      subtitle: 'Loyalty',
+                      leading: Image.asset(
+                        'assets/images/iconProgram.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    _smallCard(
+                      'Eka Poin',
+                      subtitle: '30000',
+                      leading: Image.asset(
+                        'assets/images/iconPoin.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 12),
               Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 elevation: 2,
                 child: Padding(
                   padding: const EdgeInsets.all(14.0),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    const Text('Ekatunggal Tunas Mandiri', style: TextStyle(fontWeight: FontWeight.w600, fontFamily: 'poppins', fontSize: 16)),
-                    const SizedBox(height: 8),
-                    Row(children: [
-                      const Icon(Icons.location_on, size: 16, color: primaryColor),
-                      const SizedBox(width: 4),
-                      Text(currentBranch, style: const TextStyle(color: Colors.black, fontFamily: 'lato', fontSize: 12, fontWeight: FontWeight.w800)),
-                    ]),
-                    const SizedBox(height: 12),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: SizedBox(
-                        width: 110,
-                        height: 36,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // BUKA halaman filterable per-branch (tanpa bloc)
-                            Navigator.push(context, MaterialPageRoute(builder: (_) => ProductListPage(mode: ProductListMode.filterable)));
-                          },
-                          style: ElevatedButton.styleFrom(backgroundColor: primaryColor, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), padding: EdgeInsets.zero),
-                          child: const Text('Lihat Produk', style: TextStyle(color: Colors.white, fontFamily: 'lato', fontWeight: FontWeight.w700, fontSize: 12)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Ekatunggal Tunas Mandiri',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'poppins',
+                          fontSize: 16,
                         ),
                       ),
-                    ),
-                  ]),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.location_on,
+                            size: 16,
+                            color: primaryColor,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            currentBranch,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'lato',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: SizedBox(
+                          width: 110,
+                          height: 36,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // BUKA halaman filterable per-branch (tanpa bloc)
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ProductListPage(
+                                    mode: ProductListMode.filterable,
+                                  ),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: const Text(
+                              'Lihat Produk',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'lato',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 18),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                const Text('Produk Baru', style: TextStyle(fontWeight: FontWeight.bold, color: primaryColor, fontFamily: 'poppins', fontSize: 14)),
-                TextButton(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Produk Baru',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: primaryColor,
+                      fontFamily: 'poppins',
+                      fontSize: 14,
+                    ),
+                  ),
+                  TextButton(
                     onPressed: () {
                       // Lihat Semua -> buka halaman ALL PRODUCTS tanpa filter
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => ProductListPage(mode: ProductListMode.newProducts)));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ProductListPage(
+                            mode: ProductListMode.newProducts,
+                          ),
+                        ),
+                      );
                     },
-                    child: const Text('Lihat Semua', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12, fontFamily: 'poppins', color: Color.fromARGB(99, 0, 0, 0)))),
-              ]),
+                    child: const Text(
+                      'Lihat Semua',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        fontFamily: 'poppins',
+                        color: Color.fromARGB(99, 0, 0, 0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 8),
 
               // HORIZONTAL CARDS -> tampilkan produk baru (statik gambar)
               SizedBox(
-                height: 218,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _sampleProducts.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 25),
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  itemBuilder: (context, idx) {
-                    final p = _sampleProducts[idx];
-                    return ProductCard(
-                      product: p,
-                      isFavorite: _favorites[p.id] ?? false,
-                      onFavoriteChanged: (id, fav) => _onFavoriteChanged(id, fav),
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(product: p))),
-                    );
-                  },
-                ),
-              ),
+  height: productCardHeight, // gunakan konstanta agar konsisten
+  child: ListView.separated(
+    scrollDirection: Axis.horizontal,
+    itemCount: _sampleProducts.length,
+    separatorBuilder: (_, __) => const SizedBox(width: 20),
+    padding: const EdgeInsets.symmetric(horizontal: 0),
+    itemBuilder: (context, idx) {
+      final p = _sampleProducts[idx];
+      return ProductCard(
+        product: p,
+        isFavorite: _favorites[p.id] ?? false,
+        onFavoriteChanged: (id, fav) => _onFavoriteChanged(id, fav),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ProductDetailPage(product: p),
+          ),
+        ),
+      );
+    },
+  ),
+),
 
               const SizedBox(height: 28),
             ],
