@@ -21,10 +21,16 @@ class ProductCard extends StatelessWidget {
     required this.onTap,
   }) : super(key: key);
 
+  String _defaultThumbnail() {
+    if (product.colors.isEmpty) return 'assets/images/placeholder.png';
+    final def = product.colors.firstWhere((c) => c.isDefault, orElse: () => product.colors.first);
+    return def.thumbnail;
+  }
+
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFFB11F23);
-    final thumbnail = product.colors.isNotEmpty ? product.colors[0].thumbnail : 'assets/images/placeholder.png';
+    final thumbnail = _defaultThumbnail();
 
     return SizedBox(
       width: 160,
@@ -41,7 +47,7 @@ class ProductCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // IMAGE AREA (static: always warna pertama)
+                // IMAGE AREA (tetap 160 tinggi agar proporsi rapi)
                 SizedBox(
                   height: 160,
                   child: Stack(
@@ -81,9 +87,10 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
 
-                // BOTTOM INFO AREA
+                // BOTTOM INFO AREA (mengisi sisa tinggi)
                 Expanded(
-                  child: Padding(
+                  child: Container(
+                        color: const Color(0xffffffff),
                     padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
                     child: Row(
                       children: [
@@ -109,7 +116,7 @@ class ProductCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontFamily: 'lato',
                                   fontSize: 12,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w500,
                                   color: primaryColor,
                                 ),
                               ),
@@ -120,20 +127,20 @@ class ProductCard extends StatelessWidget {
                         const SizedBox(width: 8),
 
                         // small arrow circle box
-                        Container(
-                          width: 36,
-                          height: 36,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(18),
-                            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 2, offset: Offset(0, 1))],
-                          ),
-                          child: const Icon(
-                            Icons.arrow_forward,
-                            size: 18,
-                            color: Colors.black54,
-                          ),
-                        ),
+                        // Container(
+                        //   width: 36,
+                        //   height: 36,
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.white,
+                        //     borderRadius: BorderRadius.circular(18),
+                        //     boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 2, offset: Offset(0, 1))],
+                        //   ),
+                        //   child: const Icon(
+                        //     Icons.arrow_forward,
+                        //     size: 18,
+                        //     color: Colors.black54,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
