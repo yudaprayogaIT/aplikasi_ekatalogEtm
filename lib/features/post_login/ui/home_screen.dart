@@ -8,6 +8,8 @@ import 'package:ekatalog_etm/features/product/widgets/product_card.dart';
 import 'package:ekatalog_etm/models/product.dart';
 import '../../../widgets/bottom_nav.dart';
 import '../../../widgets/profile_header.dart';
+import 'package:provider/provider.dart';
+import '../../../services/auth_service.dart';
 
 const double productCardHeight = 210;
 
@@ -21,7 +23,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final Map<int, bool> _favorites = {};
   final List<Product> _sampleProducts = [];
-  String currentBranch = 'Bogor'; // contoh, bisa diambil dari profil
 
   @override
   void initState() {
@@ -115,7 +116,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Color(0xFFB11F23);
+    final auth = Provider.of<AuthService>(context);
+    // company title fallback ke teks statis jika tidak ada company di provider
+    final daerah = auth.daerah ?? 'Ekatunggal Tunas Mandiri';
+
+    // branch priority: branch table -> company.branch_name -> fallback 'Bogor'
+    final branchName = auth.branch != null
+        ? (auth.branch!['branch_name']?.toString() ?? '')
+        : (auth.company != null
+            ? (auth.company!['branch_name']?.toString() ?? auth.company!['company_name']?.toString() ?? '')
+            : '');
+
+    final primaryColor = const Color(0xFFB11F23);
     final bottomInset = MediaQuery.of(context).viewPadding.bottom;
     final bottomPadding = bottomInset + kBottomNavigationBarHeight + 12;
 
@@ -183,9 +195,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Ekatunggal Tunas Mandiri',
-                        style: TextStyle(
+                      // judul (company / fallback)
+                      Text(
+                        branchName,
+                        style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontFamily: 'poppins',
                           fontSize: 16,
@@ -194,14 +207,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.location_on,
                             size: 16,
                             color: primaryColor,
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            currentBranch,
+                            // tampilkan branchName atau fallback
+                            daerah.isNotEmpty ? daerah : 'Bogor',
                             style: const TextStyle(
                               color: Colors.black,
                               fontFamily: 'lato',
@@ -256,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Produk Baru',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -293,28 +307,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // HORIZONTAL CARDS -> tampilkan produk baru (statik gambar)
               SizedBox(
-  height: productCardHeight, // gunakan konstanta agar konsisten
-  child: ListView.separated(
-    scrollDirection: Axis.horizontal,
-    itemCount: _sampleProducts.length,
-    separatorBuilder: (_, __) => const SizedBox(width: 20),
-    padding: const EdgeInsets.symmetric(horizontal: 0),
-    itemBuilder: (context, idx) {
-      final p = _sampleProducts[idx];
-      return ProductCard(
-        product: p,
-        isFavorite: _favorites[p.id] ?? false,
-        onFavoriteChanged: (id, fav) => _onFavoriteChanged(id, fav),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ProductDetailPage(product: p),
-          ),
-        ),
-      );
-    },
-  ),
-),
+                height: productCardHeight, // gunakan konstanta agar konsisten
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _sampleProducts.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  itemBuilder: (context, idx) {
+                    final p = _sampleProducts[idx];
+                    return ProductCard(
+                      product: p,
+                      isFavorite: _favorites[p.id] ?? false,
+                      onFavoriteChanged: (id, fav) => _onFavoriteChanged(id, fav),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ProductDetailPage(product: p),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
 
               const SizedBox(height: 28),
             ],
