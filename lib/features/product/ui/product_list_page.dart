@@ -1,5 +1,4 @@
 // lib/features/product/ui/product_list_page.dart
-// import 'dart:json';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -17,8 +16,13 @@ enum SortOption { latest, oldest, aToZ, zToA }
 
 class ProductListPage extends StatefulWidget {
   final ProductListMode mode;
-  const ProductListPage({Key? key, this.mode = ProductListMode.filterable})
-    : super(key: key);
+  final String? filterCategory;
+
+  const ProductListPage({
+    Key? key,
+    this.mode = ProductListMode.filterable,
+    this.filterCategory,
+  }) : super(key: key);
 
   @override
   State<ProductListPage> createState() => _ProductListPageState();
@@ -39,11 +43,14 @@ class _ProductListPageState extends State<ProductListPage>
 
   final Set<String> _selectedParents = {};
   final Set<String> _selectedSubs = {};
-  final Set<int> _favoriteIds = {}; // local favorite tracking for demo
+  final Set<int> _favoriteIds = {};
   SortOption _sort = SortOption.aToZ;
 
   bool _collapseTipe = false;
   bool _collapseKategori = false;
+
+  String _pageTitle = 'Semua Produk'; // <-- new: dynamic page title
+  late bool _isFromCategory; 
 
   final Map<String, List<String>> _categoryTree = {
     'Material Springbed & Sofa': [
@@ -89,6 +96,23 @@ class _ProductListPageState extends State<ProductListPage>
       _loadSavedFilters();
       _searchController.addListener(_onSearchChanged);
     }
+
+    // set flag apakah halaman ini dibuka dari CategoriesScreen
+  _isFromCategory = widget.filterCategory != null && widget.filterCategory!.trim().isNotEmpty;
+
+// Only set page title from filterCategory when page is opened from category
+  if (_isFromCategory) {
+    final parent = _findParentForSub(widget.filterCategory!.trim());
+    _pageTitle = parent ?? widget.filterCategory!.trim();
+  }
+
+    // // If filterCategory passed, pre-set page title to its parent (tipe) if possible.
+    // if (widget.filterCategory != null &&
+    //     widget.filterCategory!.trim().isNotEmpty) {
+    //   final parent = _findParentForSub(widget.filterCategory!.trim());
+    //   _pageTitle = parent ?? widget.filterCategory!.trim();
+    // }
+
     _loadProducts();
 
     WidgetsBinding.instance.addPostFrameCallback(
@@ -120,6 +144,16 @@ class _ProductListPageState extends State<ProductListPage>
         orElse: () => SortOption.aToZ,
       );
       _searchController.text = search;
+
+      // update page title if parents exist in saved filters
+      if (_selectedParents.isNotEmpty) {
+        _pageTitle = _selectedParents.first;
+      } else if (_selectedSubs.isNotEmpty) {
+        final parent = _findParentForSub(_selectedSubs.first);
+        _pageTitle = parent ?? 'Semua Produk';
+      } else {
+        _pageTitle = 'Semua Produk';
+      }
     });
   }
 
@@ -143,6 +177,10 @@ class _ProductListPageState extends State<ProductListPage>
       _selectedSubs.clear();
       _searchController.clear();
       _sort = SortOption.aToZ;
+      if (!_isFromCategory) {
+      _pageTitle = 'Semua Produk'; // only reset title when not coming from category
+    }
+      // _pageTitle = 'Semua Produk'; // reset title
     });
 
     _applyFilters();
@@ -165,6 +203,17 @@ class _ProductListPageState extends State<ProductListPage>
         _allProducts.sort((a, b) => b.id.compareTo(a.id));
         setState(() => _visible = List.from(_allProducts));
       } else {
+        if (widget.filterCategory != null &&
+            widget.filterCategory!.trim().isNotEmpty) {
+          final cat = widget.filterCategory!.trim();
+          _selectedSubs.add(cat);
+          final parent = _findParentForSub(cat);
+          if (parent != null) _selectedParents.add(parent);
+
+          // also ensure pageTitle is consistent (in case _findParentForSub changed later)
+          _pageTitle = parent ?? cat;
+        }
+
         _applyFilters();
       }
     } catch (e) {
@@ -189,6 +238,17 @@ class _ProductListPageState extends State<ProductListPage>
     final na = _norm(a);
     final nb = _norm(b);
     return na == nb || na.contains(nb) || nb.contains(na);
+  }
+
+  String? _findParentForSub(String sub) {
+    for (var entry in _categoryTree.entries) {
+      for (var child in entry.value) {
+        if (_fuzzyMatch(child, sub) || _fuzzyMatch(sub, child)) {
+          return entry.key;
+        }
+      }
+    }
+    return null;
   }
 
   bool _productMatchesCategory(Product p) {
@@ -353,7 +413,8 @@ class _ProductListPageState extends State<ProductListPage>
                             style: TextStyle(
                               color: selected ? Colors.black : Colors.black87,
                               fontWeight: FontWeight.w600,
-                              fontSize: 13, fontFamily: 'poppins'
+                              fontSize: 13,
+                              fontFamily: 'poppins',
                             ),
                           ),
                         ),
@@ -430,7 +491,8 @@ class _ProductListPageState extends State<ProductListPage>
                                       ? Colors.black87
                                       : Colors.grey.shade600),
                             fontWeight: sel ? FontWeight.w700 : FontWeight.w600,
-                            fontSize: 12, fontFamily: 'poppins',
+                            fontSize: 12,
+                            fontFamily: 'poppins',
                           ),
                         ),
                       ),
@@ -469,7 +531,9 @@ class _ProductListPageState extends State<ProductListPage>
                                     'Filter',
                                     style: TextStyle(
                                       fontSize: 20,
-                                      fontWeight: FontWeight.bold, fontFamily: 'poppins')
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'poppins',
+                                    ),
                                   ),
                                 ),
                                 TextButton(
@@ -505,7 +569,8 @@ class _ProductListPageState extends State<ProductListPage>
                                     'Tipe',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 12, fontFamily: 'poppins'
+                                      fontSize: 12,
+                                      fontFamily: 'poppins',
                                     ),
                                   ),
                                   Icon(
@@ -545,7 +610,8 @@ class _ProductListPageState extends State<ProductListPage>
                                     'Kategori',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 12, fontFamily: 'poppins'
+                                      fontSize: 12,
+                                      fontFamily: 'poppins',
                                     ),
                                   ),
                                   Icon(
@@ -562,7 +628,8 @@ class _ProductListPageState extends State<ProductListPage>
                               Text(
                                 'Material Springbed & Sofa',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontFamily: 'poppins',
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'poppins',
                                   color: materialSelected || !furnitureSelected
                                       ? Colors.black87
                                       : Colors.grey,
@@ -668,14 +735,17 @@ class _ProductListPageState extends State<ProductListPage>
                           Expanded(
                             child: OutlinedButton(
                               onPressed: () => Navigator.of(context).pop(false),
-                               style: ElevatedButton.styleFrom(
+                              style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24),
                                 ),
                               ),
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 14),
-                                child: Text('Batal', style: TextStyle(color: Colors.black),),
+                                child: Text(
+                                  'Batal',
+                                  style: TextStyle(color: Colors.black),
+                                ),
                               ),
                             ),
                           ),
@@ -693,6 +763,28 @@ class _ProductListPageState extends State<ProductListPage>
                                   _sort = workingSort;
                                   _collapseTipe = workingCollapseTipe;
                                   _collapseKategori = workingCollapseKategori;
+
+                                  // update page title based on selection:
+                                  // if (_selectedParents.isNotEmpty) {
+                                  //   _pageTitle = _selectedParents.first;
+                                  // } else if (_selectedSubs.isNotEmpty) {
+                                  //   final parent = _findParentForSub(
+                                  //     _selectedSubs.first,
+                                  //   );
+                                  //   _pageTitle = parent ?? _selectedSubs.first;
+                                  // } else {
+                                  //   _pageTitle = 'Semua Produk';
+                                  // }
+                                  if (_isFromCategory) {
+      if (_selectedParents.isNotEmpty) {
+        _pageTitle = _selectedParents.first;
+      } else if (_selectedSubs.isNotEmpty) {
+        final parent = _findParentForSub(_selectedSubs.first);
+        _pageTitle = parent ?? _selectedSubs.first;
+      } else {
+        _pageTitle = widget.filterCategory ?? 'Semua Produk';
+      }
+                                  }
                                 });
                                 _saveFilters();
                                 _applyFilters();
@@ -740,7 +832,6 @@ class _ProductListPageState extends State<ProductListPage>
             ),
             child: Row(
               children: [
-                // const SizedBox(width: 8),
                 Expanded(
                   child: TextField(
                     controller: _searchController,
@@ -790,7 +881,7 @@ class _ProductListPageState extends State<ProductListPage>
               'assets/icons/filter.png',
               width: 24,
               height: 24,
-              color: Colors.black, // kalau mau kasih warna overlay
+              color: Colors.black,
             ),
           ),
         ),
@@ -813,7 +904,6 @@ class _ProductListPageState extends State<ProductListPage>
           const Text('Tipe', style: TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
 
-          // parents (Tipe) — aligned left
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -842,21 +932,18 @@ class _ProductListPageState extends State<ProductListPage>
 
           const SizedBox(height: 10),
 
-          // Sub kategori title
           const Text('Kategori', style: TextStyle(fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
 
-          // box containing sub categories (selected) or suggestion
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(2),
             child: _selectedSubs.isNotEmpty
                 ? SizedBox(
-                    height: 44, // cukup untuk memuat Chip secara horizontal
+                    height: 44,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       physics: const BouncingScrollPhysics(),
-                      // padding: const EdgeInsets.symmetric(horizontal: 4),
                       itemCount: _selectedSubs.length,
                       separatorBuilder: (_, __) => const SizedBox(width: 8),
                       itemBuilder: (context, index) {
@@ -895,7 +982,10 @@ class _ProductListPageState extends State<ProductListPage>
   @override
   Widget build(BuildContext context) {
     final bool isFilterable = widget.mode == ProductListMode.filterable;
-    final title = isFilterable ? 'Semua Produk' : 'Produk Baru';
+    // use _pageTitle when filterCategory provided or when user selected tipe/subs
+    final title = (_pageTitle.isNotEmpty)
+        ? _pageTitle
+        : (isFilterable ? 'Semua Produk' : 'Produk Baru');
 
     final pageFade = CurvedAnimation(
       parent: _enterController,
@@ -922,7 +1012,7 @@ class _ProductListPageState extends State<ProductListPage>
           icon: const Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        toolbarHeight: 80, // <--- tinggi AppBar
+        toolbarHeight: 80,
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())

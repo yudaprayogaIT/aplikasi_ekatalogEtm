@@ -117,7 +117,7 @@ routes: {
   // home dan semua menu di dalamnya
   '/home': (c) => const HomeScreen(),
   '/categories': (c) => const CategoriesScreen(),
-  '/favorites': (c) => const FavoritesScreen(),
+  '/wishlist': (c) => const WishlistScreen(),
   '/account': (c) => const AccountScreen(),
 
   // Profile dan Edit Profile

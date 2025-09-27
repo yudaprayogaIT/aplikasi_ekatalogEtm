@@ -1,0 +1,107 @@
+[
+  {
+    "name": "Aksesories",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Aksesories Kaki",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Bahan Kimia",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Busa",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "HDP",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Jasa Quilting",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Kain Polos Sofa",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Kain Polos Springbed",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Kawat",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Non Woven",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Other",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Per Coil",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Pita List",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Plastik",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Stapless",
+    "tipe": "Material",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Kasur",
+    "tipe": "Furniture",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Kitchen",
+    "tipe": "Furniture",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Lemari",
+    "tipe": "Furniture",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Kursi",
+    "tipe": "Furniture",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Meja",
+    "tipe": "Furniture",
+    "image": "assets/images/kategori.png"
+  },
+  {
+    "name": "Rak",
+    "tipe": "Furniture",
+    "image": "assets/images/kategori.png"
+  }
+  ]

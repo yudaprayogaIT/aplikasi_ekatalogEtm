@@ -9,7 +9,7 @@ class BottomNavBar extends StatelessWidget {
   static const _items = <_NavItem>[
     _NavItem(icon: Icons.home, label: 'Home', route: '/home'),
     _NavItem(icon: Icons.grid_view, label: 'Kategori', route: '/categories'),
-    _NavItem(icon: Icons.favorite_border, label: 'Favorit', route: '/favorites'),
+    _NavItem(icon: Icons.favorite_border, label: 'Wishlist', route: '/wishlist'),
     _NavItem(icon: Icons.person_outline, label: 'Akun', route: '/account'),
   ];
 

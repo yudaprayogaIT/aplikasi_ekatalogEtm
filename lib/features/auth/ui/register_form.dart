@@ -33,6 +33,7 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
   final birthDisplayCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
   final confirmPasswordCtrl = TextEditingController();
+  final emailCtrl = TextEditingController();
 
   // gender - use simple selected variable to avoid Dropdown assertion
   String? selectedGender;
@@ -46,6 +47,7 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
   final birthFocus = FocusNode();
   final passwordFocus = FocusNode();
   final confirmFocus = FocusNode();
+  final emailFocus = FocusNode();
 
   bool loading = false;
 
@@ -81,6 +83,7 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
     birthDisplayCtrl.addListener(_onCtrlChanged);
     passwordCtrl.addListener(_onCtrlChanged);
     confirmPasswordCtrl.addListener(_onCtrlChanged);
+    emailCtrl.addListener(_onCtrlChanged);
 
     companyNameFocus.addListener(_onFocusChanged);
     companyAddressFocus.addListener(_onFocusChanged);
@@ -90,6 +93,7 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
     birthFocus.addListener(_onFocusChanged);
     passwordFocus.addListener(_onFocusChanged);
     confirmFocus.addListener(_onFocusChanged);
+    emailFocus.addListener(_onFocusChanged);
   }
 
   void _onCtrlChanged() {
@@ -112,6 +116,7 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
     birthDisplayCtrl.dispose();
     passwordCtrl.dispose();
     confirmPasswordCtrl.dispose();
+    emailCtrl.dispose();
 
     companyNameFocus.dispose();
     companyAddressFocus.dispose();
@@ -121,6 +126,7 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
     birthFocus.dispose();
     passwordFocus.dispose();
     confirmFocus.dispose();
+    emailFocus.dispose();
 
     super.dispose();
   }
@@ -736,6 +742,8 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
         'gender': selectedGender ?? '',
         'phone_number': widget.phone,
         'password': passwordCtrl.text,
+        'email': emailCtrl.text.trim,
+        'profile_photo': null,
         'status': 'pending',
         // created_at / updated_at handled by DB default
       };
@@ -919,7 +927,7 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
       appBar: AppBar(
         backgroundColor: primaryColor,
         elevation: 0,
-          leading: IconButton(
+        leading: IconButton(
           padding: const EdgeInsets.symmetric(vertical: 35),
           icon: const Icon(FontAwesomeIcons.arrowLeft, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -1022,9 +1030,14 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
                               controller: foundedDisplayCtrl,
                               focusNode: foundedFocus,
                               extraSuffix: IconButton(
-                                icon: const Icon(FontAwesomeIcons.solidCalendarDays, size: 22),
+                                icon: const Icon(
+                                  FontAwesomeIcons.solidCalendarDays,
+                                  size: 22,
+                                ),
                                 onPressed: () {
-                                  FocusScope.of(context).requestFocus(foundedFocus);
+                                  FocusScope.of(
+                                    context,
+                                  ).requestFocus(foundedFocus);
                                   _pickFoundedDate();
                                 },
                               ),
@@ -1193,7 +1206,10 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
                               controller: birthDisplayCtrl,
                               focusNode: birthFocus,
                               extraSuffix: IconButton(
-                                icon: const Icon(FontAwesomeIcons.solidCalendarDays, size: 22),
+                                icon: const Icon(
+                                  FontAwesomeIcons.solidCalendarDays,
+                                  size: 22,
+                                ),
                                 onPressed: () {
                                   FocusScope.of(
                                     context,
@@ -1205,12 +1221,39 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
                             ),
                           ),
                           const SizedBox(height: 12),
+
+                          TextFormField(
+                            controller: emailCtrl,
+                            focusNode: emailFocus,
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: inputDecoration(
+                              label: 'Email Pemilik',
+                              controller: emailCtrl,
+                              focusNode: emailFocus,
+                            ),
+                            validator: (v) {
+                              if (v == null || v.trim().isEmpty)
+                                return 'Email wajib diisi';
+                              final email = v.trim();
+                              final emailRegex = RegExp(
+                                r"^[\w\.\-]+@([\w\-]+\.)+[a-zA-Z]{2,}$",
+                              );
+                              if (!emailRegex.hasMatch(email))
+                                return 'Format email tidak valid';
+                              return null;
+                            },
+                          ),
+
+                          const SizedBox(height: 12),
                           // Gender dropdown
                           DropdownButtonFormField<String>(
                             initialValue: selectedGender,
-                            decoration: inputDecoration(label: 'Jenis Kelamin').copyWith(
-                              labelStyle: TextStyle(color: Colors.grey[600]),
-                            ),
+                            decoration: inputDecoration(label: 'Jenis Kelamin')
+                                .copyWith(
+                                  labelStyle: TextStyle(
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
                             items: const [
                               DropdownMenuItem(
                                 value: 'Laki-laki',
@@ -1289,7 +1332,7 @@ class _RegistrationFormScreenState extends State<RegistrationFormScreen> {
                     ),
 
                     const SizedBox(height: 18),
-                    
+
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: PrimaryButton(
